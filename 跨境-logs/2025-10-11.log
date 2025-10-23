@@ -1,0 +1,55 @@
+2025-10-11 10:33:03.701 | INFO     | __main__:<module>:280 - 开始执行跨境税单RPA机器人
+2025-10-11 10:33:03.811 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:33:03.811 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "173654"}
+2025-10-11 10:33:29.644 | INFO     | __main__:fetch_bill_of_lading_data:253 - {'invoiceNo': '173654', 'invoiceResult': {'arancelarios': '290407.51', 'sobre': '432790.65', 'selectivo': '38182.63', 'procomer': '1522.56', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '28637.22'}}
+2025-10-11 10:35:26.196 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:35:26.196 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "173656"}
+2025-10-11 10:35:48.730 | INFO     | __main__:fetch_bill_of_lading_data:253 - {'invoiceNo': '173656', 'invoiceResult': {'arancelarios': '320539.00', 'sobre': '463973.36', 'selectivo': '27124.82', 'procomer': '1522.56', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '31158.98'}}
+2025-10-11 10:36:23.023 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:36:23.023 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "173659"}
+2025-10-11 10:36:42.367 | INFO     | __main__:fetch_bill_of_lading_data:253 - {'invoiceNo': '173659', 'invoiceResult': {'arancelarios': '254523.70', 'sobre': '368593.49', 'selectivo': '30862.47', 'procomer': '1522.56', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '24199.08'}}
+2025-10-11 10:36:46.500 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:36:46.500 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174040"}
+2025-10-11 10:37:03.733 | INFO     | __main__:establish_connection:81 - {'invoiceNo': '', 'invoiceResult': 'ERROR'}
+2025-10-11 10:37:07.897 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:37:07.897 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174220"}
+2025-10-11 10:37:27.307 | INFO     | __main__:establish_connection:81 - {'invoiceNo': '', 'invoiceResult': 'ERROR'}
+2025-10-11 10:39:15.237 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:39:15.237 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174040"}
+2025-10-11 10:39:32.532 | INFO     | __main__:establish_connection:81 - {'invoiceNo': '', 'invoiceResult': 'ERROR'}
+2025-10-11 10:45:27.204 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:45:27.204 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "173654"}
+2025-10-11 10:45:46.408 | INFO     | __main__:establish_connection:81 - {'invoiceNo': '', 'invoiceResult': 'ERROR'}
+2025-10-11 10:45:54.652 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:45:54.652 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "173654"}
+2025-10-11 10:46:19.402 | INFO     | __main__:establish_connection:81 - {'invoiceNo': '', 'invoiceResult': 'ERROR'}
+2025-10-11 10:47:08.853 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:47:08.853 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "173654"}
+2025-10-11 10:47:33.678 | INFO     | __main__:establish_connection:81 - {'invoiceNo': '', 'invoiceResult': 'ERROR'}
+2025-10-11 10:51:53.521 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:51:53.521 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174040"}
+2025-10-11 10:51:58.222 | INFO     | __main__:<module>:282 - 开始执行跨境税单RPA机器人
+2025-10-11 10:52:02.466 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:52:02.466 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174040"}
+2025-10-11 10:52:27.770 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '174040', 'invoiceResult': {'arancelarios': '86730.55', 'sobre': '141113.58', 'selectivo': '5948.98', 'procomer': '1522.56', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '9499.54'}}
+2025-10-11 10:52:52.507 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:52:52.507 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174220"}
+2025-10-11 10:53:19.717 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '174220', 'invoiceResult': {'arancelarios': '308389.43', 'sobre': '443769.78', 'selectivo': '41738.66', 'procomer': '1518.00', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '29485.75'}}
+2025-10-11 10:53:23.863 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:53:23.863 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174223"}
+2025-10-11 10:53:40.961 | INFO     | __main__:CR:170 - {'invoiceNo': '174223', 'invoiceResult': None}
+2025-10-11 10:54:05.664 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:54:05.664 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174223"}
+2025-10-11 10:54:40.005 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '174223', 'invoiceResult': {'arancelarios': '294590.01', 'sobre': '408847.24', 'selectivo': '30545.16', 'procomer': '1518.00', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '27472.70'}}
+2025-10-11 10:55:17.095 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:55:17.095 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174225"}
+2025-10-11 10:55:45.792 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '174225', 'invoiceResult': {'arancelarios': '305977.31', 'sobre': '449363.78', 'selectivo': '29986.50', 'procomer': '1518.00', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '29533.01'}}
+2025-10-11 10:55:49.922 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:55:49.922 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174230"}
+2025-10-11 10:56:13.261 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '174230', 'invoiceResult': {'arancelarios': '211994.63', 'sobre': '426350.49', 'selectivo': '19926.55', 'procomer': '1518.00', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '20886.25'}}
+2025-10-11 10:56:17.393 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:56:17.393 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174364"}
+2025-10-11 10:56:35.637 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '174364', 'invoiceResult': {'arancelarios': '420158.39', 'sobre': '527566.31', 'selectivo': '5402.58', 'procomer': '1518.99', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '35770.79'}}
+2025-10-11 10:56:39.756 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-11 10:56:39.757 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo": "174365"}
+2025-10-11 10:56:55.969 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '174365', 'invoiceResult': {'arancelarios': '470913.98', 'sobre': '559276.30', 'selectivo': '9392.73', 'procomer': '1518.99', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '37752.74'}}

@@ -1,0 +1,210 @@
+2025-10-10 15:02:16.195 | INFO     | __main__:<module>:292 - 开始执行跨境税单RPA机器人
+2025-10-10 15:02:57.185 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:02:57.185 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:02:57.185 | ERROR    | __main__:<module>:300 - 'msgType'
+2025-10-10 15:06:38.201 | INFO     | __main__:<module>:292 - 开始执行跨境税单RPA机器人
+2025-10-10 15:06:46.467 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:46.467 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:06:46.467 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:06:46.467 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:06:46.499 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:46.499 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:06:48.502 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:06:48.502 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:06:48.517 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:48.517 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:06:50.518 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:06:50.518 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:06:50.533 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:50.533 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:06:52.538 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:06:52.539 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:06:52.562 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:52.562 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:06:54.568 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:06:54.568 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:06:54.587 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:54.587 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:06:56.592 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:06:56.592 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:06:56.603 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:56.603 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:06:58.606 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:06:58.606 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:06:58.619 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:06:58.619 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:07:00.621 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:07:00.621 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:07:00.636 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:07:00.636 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:07:02.639 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:07:02.640 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:07:02.652 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:07:02.652 | INFO     | __main__:get_release_messages:45 - 获取的指令：{"keyNo":"123"}
+2025-10-10 15:07:04.655 | INFO     | __main__:establish_connection:92 - 输出测试时期的识别标记
+2025-10-10 15:07:04.655 | INFO     | __main__:establish_connection:93 - 123
+2025-10-10 15:09:25.651 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:09:25.651 | INFO     | __main__:get_release_messages:45 - 获取的指令：
+{
+  "invoiceNos": ["172745", "172746"]
+}
+2025-10-10 15:09:25.651 | ERROR    | __main__:<module>:300 - 'keyNo'
+2025-10-10 15:16:23.745 | INFO     | __main__:<module>:276 - 开始执行跨境税单RPA机器人
+2025-10-10 15:16:32.014 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:16:32.014 | INFO     | __main__:get_release_messages:45 - 获取的指令：
+{
+  "invoiceNos": "172745"
+}
+2025-10-10 15:17:07.578 | INFO     | __main__:establish_connection:83 - RPA登陆页面异常：
+The connection to the page has been disconnected.
+Version: 4.1.0.18
+2025-10-10 15:17:10.156 | INFO     | __main__:<module>:276 - 开始执行跨境税单RPA机器人
+2025-10-10 15:17:14.321 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:17:14.321 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "172745"
+}
+2025-10-10 15:17:39.175 | INFO     | __main__:establish_connection:83 - RPA登陆页面异常：
+No element found.
+Method: ele()
+Arguments: {'locator': 'xpath://*[@id="vAGENTE"]', 'index': 1, 'timeout': 10}
+Version: 4.1.0.18
+2025-10-10 15:18:43.536 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:18:43.536 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "172745"
+}
+2025-10-10 15:19:01.930 | INFO     | __main__:fetch_bill_of_lading_data:249 - {'arancelarios': '353296.38', 'sobre': '488372.10', 'selectivo': '25772.47', 'procomer': '1518.63', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '31836.03', 'invoiceNo': '172745'}
+2025-10-10 15:23:52.127 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:23:52.127 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "17772"
+}
+2025-10-10 15:25:30.857 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:25:30.857 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "17772"
+}
+2025-10-10 15:26:12.222 | INFO     | __main__:<module>:307 - 开始执行跨境税单RPA机器人
+2025-10-10 15:26:16.417 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:26:16.417 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "17772"
+}
+2025-10-10 15:26:35.440 | INFO     | __main__:CR:193 - {'invoiceNo': '17772', 'invoiceResult': None}
+2025-10-10 15:26:39.518 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:26:39.518 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "17772"
+}
+2025-10-10 15:26:59.554 | INFO     | __main__:CR:193 - {'invoiceNo': '17772', 'invoiceResult': None}
+2025-10-10 15:27:03.675 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 15:27:03.676 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "172745"
+}
+2025-10-10 15:27:23.830 | INFO     | __main__:fetch_bill_of_lading_data:280 - {'invoiceNo': '172745', 'invoiceResult': {'arancelarios': '353296.38', 'sobre': '488372.10', 'selectivo': '25772.47', 'procomer': '1518.63', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '31836.03'}}
+2025-10-10 15:39:14.933 | ERROR    | __main__:<module>:315 - 
+2025-10-10 15:39:28.581 | ERROR    | __main__:<module>:315 - 
+2025-10-10 15:39:42.637 | ERROR    | __main__:<module>:315 - 
+2025-10-10 15:55:32.942 | ERROR    | __main__:<module>:315 - 
+2025-10-10 15:55:46.991 | ERROR    | __main__:<module>:315 -
+2025-10-10 16:01:49.974 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:01:59.003 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:02:08.053 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:02:17.103 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:02:26.155 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:02:35.202 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:02:44.253 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:02:53.290 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:03:02.330 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:03:11.361 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:03:20.411 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:03:29.450 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:03:38.497 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:03:47.532 | ERROR    | __main__:<module>:315 - StreamLostError: ("Stream connection lost: ConnectionResetError(54, 'Connection reset by peer')",)
+2025-10-10 16:04:49.377 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:04:49.377 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "77159"
+}
+2025-10-10 16:04:49.380 | INFO     | __main__:establish_connection:83 - RPA登陆页面异常：
+The connection to the page has been disconnected.
+Version: 4.1.0.18
+2025-10-10 16:04:52.157 | INFO     | __main__:<module>:307 - 开始执行跨境税单RPA机器人
+2025-10-10 16:05:00.549 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:05:00.549 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNos": "77159"
+}
+2025-10-10 16:05:25.123 | INFO     | __main__:CR:193 - {'invoiceNo': '77159', 'invoiceResult': None}
+2025-10-10 16:06:01.104 | INFO     | __main__:<module>:307 - 开始执行跨境税单RPA机器人
+2025-10-10 16:06:09.444 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:06:09.444 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "77159"
+}
+2025-10-10 16:06:09.444 | INFO     | __main__:establish_connection:83 - RPA登陆页面异常：'invoiceNos'
+2025-10-10 16:06:58.467 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:06:58.467 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "172745"
+}
+2025-10-10 16:06:58.467 | INFO     | __main__:establish_connection:83 - RPA登陆页面异常：'invoiceNos'
+2025-10-10 16:08:01.964 | INFO     | __main__:<module>:307 - 开始执行跨境税单RPA机器人
+2025-10-10 16:08:06.189 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:08:06.189 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "172745"
+}
+2025-10-10 16:08:25.737 | INFO     | __main__:establish_connection:83 - RPA登陆页面异常：name 'invoiceNos' is not defined
+2025-10-10 16:08:32.864 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:08:32.864 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "172745"
+}
+2025-10-10 16:08:50.074 | INFO     | __main__:establish_connection:83 - RPA登陆页面异常：name 'invoiceNos' is not defined
+2025-10-10 16:12:46.262 | INFO     | __main__:<module>:309 - 开始执行跨境税单RPA机器人
+2025-10-10 16:13:21.851 | INFO     | __main__:<module>:309 - 开始执行跨境税单RPA机器人
+2025-10-10 16:16:31.727 | INFO     | __main__:<module>:273 - 开始执行跨境税单RPA机器人
+2025-10-10 16:16:44.204 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:16:44.204 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "172745"
+}
+2025-10-10 16:17:05.473 | INFO     | __main__:fetch_bill_of_lading_data:246 - {'invoiceNo': '172745', 'invoiceResult': {'arancelarios': '353296.38', 'sobre': '488372.10', 'selectivo': '25772.47', 'procomer': '1518.63', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '31836.03'}}
+2025-10-10 16:17:21.938 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:17:21.938 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "172745"
+}
+2025-10-10 16:17:55.095 | INFO     | __main__:<module>:273 - 开始执行跨境税单RPA机器人
+2025-10-10 16:18:13.928 | INFO     | __main__:<module>:273 - 开始执行跨境税单RPA机器人
+2025-10-10 16:18:14.035 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:18:14.035 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "172745"
+}
+2025-10-10 16:18:40.748 | INFO     | __main__:fetch_bill_of_lading_data:246 - {'invoiceNo': '172745', 'invoiceResult': {'arancelarios': '353296.38', 'sobre': '488372.10', 'selectivo': '25772.47', 'procomer': '1518.63', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '31836.03'}}
+2025-10-10 16:18:44.877 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:18:44.888 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:18:48.996 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:18:49.007 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:18:53.111 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:18:53.121 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:18:57.221 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:18:57.231 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:01.326 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:01.337 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:05.474 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:05.484 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:09.608 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:09.618 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:13.717 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:13.727 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:17.848 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:17.859 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:21.988 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:21.999 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:26.119 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:26.129 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:30.259 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:30.269 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:34.396 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:34.406 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:38.533 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:38.544 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:42.670 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:42.680 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:19:46.783 | INFO     | __main__:<module>:290 - {'invoiceNo': '172745', 'invoiceResult': 'ERROR'}
+2025-10-10 16:19:46.794 | ERROR    | __main__:<module>:301 - Expecting value: line 1 column 1 (char 0)
+2025-10-10 16:20:43.155 | INFO     | __main__:<module>:293 - 开始执行跨境税单RPA机器人
+2025-10-10 16:21:08.032 | INFO     | __main__:get_release_messages:42 - 剩余未执行指令数量：
+2025-10-10 16:21:08.032 | INFO     | __main__:get_release_messages:45 - 获取的指令：{
+  "invoiceNo": "172745"
+}
+2025-10-10 16:21:25.295 | INFO     | __main__:fetch_bill_of_lading_data:266 - {'invoiceNo': '172745', 'invoiceResult': {'arancelarios': '353296.38', 'sobre': '488372.10', 'selectivo': '25772.47', 'procomer': '1518.63', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '31836.03'}}

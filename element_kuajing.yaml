@@ -1,0 +1,9 @@
+config:
+  mq_ip: 192.168.3.18
+  mq_vhost: edi_exchange
+  mq_port: 5672
+  queue_name: taxes.request.queue
+  mq_user: edi_exchange
+  mq_password: Edi@0729#exchange
+  headless: false
+
