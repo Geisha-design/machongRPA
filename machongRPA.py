@@ -63,7 +63,6 @@ def alibaba():
     page = WebPage(chromium_options=co, session_or_options=so)
     page.get('https://glp.aidc-dchain.com/login?redirectUrl=https%3A%2F%2Fglp.aidc-dchain.com%2FchinaExport%2F9610Export%2FdirectClearnce')
 
-
     # logger.info('第一次cookie状态检测')
     cookiea = page.cookies()
     dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
@@ -89,6 +88,7 @@ def alibaba():
     """
         检查要求查询的单证信息状态
         """
+    time.sleep(2)
     cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookiea])
     headers = {
         "Cookie": cookie_str
@@ -324,7 +324,12 @@ def easyChina():
     tab = page.latest_tab
     time.sleep(3)
     file_name = "./downloaded_manifests/CB10009965715731.xlsx"
-    ele = tab('xpath://*[@id="root"]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[1]/button')
+
+
+    # ui 手段 暂时屏蔽掉 走无影接口 增加机器人端执行的稳定性
+    # ele = tab('xpath://*[@id="root"]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[1]/button')
+    # ele.click.to_upload(file_name)
+
 
     # 先检测是否已经上传好啦
     # 等待任务完成后再返回
@@ -339,7 +344,7 @@ def easyChina():
     #         print("文件任务仍在上传中，等待5秒后重新检查...")
     #         time.sleep(15)  # 等待30秒后再次检查
 
-    ele.click.to_upload(file_name)
+
 
     upload_file_to_third_party('./downloaded_manifests/CB10009965715731.xlsx',page)
 
@@ -375,8 +380,26 @@ def upload_file_to_third_party(file_path,page):
         print(f"上传文件接口调用结果: {response.status_code}")
         if response.status_code == 200:
             print(response.text)
-            # result = response.json()
-            # print(f"响应内容: {result}")
+            result = response.json()
+            print(f"响应内容: {result}")
+            # 检查上传是否成功
+            # if result.get("code") == 200 or result.get("success", False):
+                # 创建completed_manifests文件夹（如果不存在）
+            completed_dir = "./completed_manifests"
+            if not os.path.exists(completed_dir):
+                os.makedirs(completed_dir)
+                print(f"创建目录: {completed_dir}")
+
+            # 移动文件到completed_manifests文件夹
+            filename = os.path.basename(file_path)
+            completed_file_path = os.path.join(completed_dir, filename)
+            # 关闭文件后再移动
+            files['files[]'][1].close()
+            # 移动文件
+            os.rename(file_path, completed_file_path)
+            print(f"文件已移动到: {completed_file_path}")
+            # else:
+            #     print("上传失败，文件未移动")
         else:
             print(f"错误响应内容: {response.text}")
     # except Exception as e:
@@ -391,11 +414,10 @@ if __name__ == '__main__':
 
 
     # 主要处理 2 3 4 步骤
-
-
+    alibaba()
 
     easyChina()
-    # alibaba()
+
     # 麻涌流程 需要按照顺序来执行
     # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika3')
     # for file_path in all_files:

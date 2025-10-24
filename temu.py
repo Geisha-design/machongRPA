@@ -331,7 +331,7 @@ def CostaRicaThree(file_path):
     # //*[@id="__collect_taxes__"]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/div[6]/button/svg
     print('开始检测是否在加载中')
     print(vvflag.text)
-    time.sleep(400)
+    # time.sleep(400)
     elev.click.to_upload(file_path)
     time.sleep(4)
     while True:
