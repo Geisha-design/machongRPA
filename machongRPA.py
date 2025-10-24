@@ -13,9 +13,11 @@
 
 
 import json
+import os
 import time
 import anyconfig
 import pika
+from cv2.version import headless
 from loguru import logger
 from DrissionPage import WebPage, ChromiumOptions, SessionOptions
 import random
@@ -317,7 +319,7 @@ def easyChina():
         cookiea = page.cookies()
         # dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
         logger.info("融易通系统验证已经为登陆状态")
-
+    time.sleep(2)
     page.get("http://192.168.8.35:10118/khi-front-declare/#/product-name-manage/goods-change")
     tab = page.latest_tab
     time.sleep(3)
@@ -339,10 +341,49 @@ def easyChina():
 
     ele.click.to_upload(file_name)
 
+    upload_file_to_third_party('./downloaded_manifests/CB10009965715731.xlsx',page)
+
     return page
 
 
+def upload_file_to_third_party(file_path,page):
+    """
+    上传文件到第三方接口
+    :param file_path: 文件路径
+    """
+    url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/import"
+    cookiea = page.cookies()
+    dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
+    cookiea = dictionary
 
+    # cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookiea])
+    # dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
+    headers = {
+        'Cookie': dictionary
+    }
+    # 构造表单数据
+    files = {
+        'files[]': (os.path.basename(file_path), open(file_path, 'rb'),
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    }
+    data = {
+        'customer': 'cainiao'
+    }
+    print(dictionary)
+    try:
+        response = requests.post(url, files=files, data=data,cookies=dictionary)
+        print(f"上传文件接口调用结果: {response.status_code}")
+        if response.status_code == 200:
+            print(response.text)
+            # result = response.json()
+            # print(f"响应内容: {result}")
+        else:
+            print(f"错误响应内容: {response.text}")
+    # except Exception as e:
+    #     print(f"调用上传文件接口时出错: {e}")
+    finally:
+        # 关闭文件
+        files['files[]'][1].close()
 
 
 
