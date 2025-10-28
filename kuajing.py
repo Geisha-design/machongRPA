@@ -271,7 +271,9 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
 
     return jsonreturn
 
-
+# {
+#   "invoiceNo": "172745"
+# }
 
 
 
@@ -284,11 +286,8 @@ if __name__ == '__main__':
     while True:
         try:
             channel,msg =establish_connection()
-            # result = json.loads(msg)
-            # invoiceNo = result["invoiceNo"]
             logger.complete()
         except Exception as e:
-
             logger.error(e)
             logger.complete()
             pass

@@ -78,6 +78,7 @@ def alibaba():
         page.ele('xpath://*[@id="member-user-auth-login"]').click()
         randomSleep()
         logger.info("alibaba登陆成功")
+        time.sleep(6)
 
     else:
         # logger.info('Second cookie status detection')
@@ -274,10 +275,53 @@ def download_file_from_url(url, save_directory, filename=None):
         return None
 
 
+def download_file_from_url_new(url, save_directory, filename=None , cookies =  None):
+    """
+    从URL下载文件并保存到指定目录
 
+    Args:
+        url (str): 文件下载链接
+        save_directory (str): 保存文件的目录路径
+        filename (str, optional): 保存的文件名，如果未提供则从URL中提取
 
+    Returns:
+        str or None: 下载成功返回保存的文件路径，失败返回None
+    """
+    try:
+        # 确保保存目录存在
+        import os
+        if not os.path.exists(save_directory):
+            os.makedirs(save_directory)
+            print(f"创建目录: {save_directory}")
 
+        # 如果没有提供文件名，从URL中提取
+        if not filename:
+            from urllib.parse import urlparse
+            parsed_url = urlparse(url)
+            filename = os.path.basename(parsed_url.path)
+            # 如果URL中没有文件名，使用默认名称
+            if not filename:
+                filename = "downloaded_file_new"
 
+        # 完整的文件保存路径
+        file_path = os.path.join(save_directory, filename)
+
+        # 下载文件
+        print(f"开始下载文件: {url}")
+        response = requests.get(url, stream=True,cookies= cookies)
+        response.raise_for_status()  # 检查请求是否成功
+
+        # 保存文件
+        with open(file_path, 'wb') as file:
+            for chunk in response.iter_content(chunk_size=8192):
+                file.write(chunk)
+
+        print(f"文件下载成功，保存路径: {file_path}")
+        return file_path
+
+    except Exception as e:
+        print(f"下载文件时出错: {e}")
+        return None
 
 
 # 192.168.8.35:10118/khi-front-declare，账号：ryt，密码：Zjport@123
@@ -330,25 +374,92 @@ def easyChina():
     # ele = tab('xpath://*[@id="root"]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[1]/button')
     # ele.click.to_upload(file_name)
 
-
-    # 先检测是否已经上传好啦
-    # 等待任务完成后再返回
-    # cookies = page.cookies()
-    # cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
-    # while True:
-    #     status = check_task_status(cookies, None)  # 这里可以传入具体的task_id
-    #     if status and status == "完成":  # 当状态不再是"分析中"时，跳出循环
-    #         print(f"任务状态已变为: {status}，继续执行下一步")
-    #         break
-    #     else:
-    #         print("文件任务仍在上传中，等待5秒后重新检查...")
-    #         time.sleep(15)  # 等待30秒后再次检查
-
-
-
     upload_file_to_third_party('./downloaded_manifests/CB10009965715731.xlsx',page)
+    # 这里增加一个对转换状态的监听的接口
+    # cookies = page.cookies()
+    cookiea = page.cookies()
+    dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
+    cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookiea])
+    while True:
+        status = check_task_status_easyChina(cookiea, None)  # 这里可以传入具体的task_id
+        if status and status == "3":  # 当状态不再是"分析中"时，跳出循环
+            print(f"任务状态已变为: {status}，继续执行下一步")
+            download_url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/export?t=1761643111904&id=41&type=change&isBlobRequest=true"
+            # 下载文件到指定目录
+            save_directory = "./downloaded_manifests_new"
+            downloaded_file = download_file_from_url_new(download_url, save_directory, f"{status}.xlsx",cookie_str)
+            if downloaded_file:
+                print(f"清单文件已保存到: {downloaded_file}")
+            else:
+                print("文件下载失败")
 
-    return page
+
+
+            break
+        elif status and status == "4":
+            print(f"任务状态已变为: {status}，转换失败")
+
+            # 需要被注释掉的
+            download_url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/export?t=1761643111904&id=41&type=change&isBlobRequest=true"
+            # 下载文件到指定目录
+            save_directory = "./downloaded_manifests_new"
+            downloaded_file = download_file_from_url_new(download_url, save_directory, f"{status}.xlsx", cookie_str)
+
+            break
+        else:
+            print("文件任务仍在上传中，等待15秒后重新检查...")
+            time.sleep(15)  # 等待30秒后再次检查
+
+    return page,status
+
+
+def check_task_status_easyChina(cookies, task_id):
+    """
+    检查任务状态
+    """
+    cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
+    headers = {
+        "Cookie": cookie_str
+    }
+
+    # 准备请求参数
+    params = {
+  "pageIndex": 1,
+  "pageSize": 10,
+  "createDateStart": "",
+  "createDateEnd": ""
+}
+    try:
+        response = requests.post(
+            'http://192.168.8.35:10118/khi-declare/declareGoodsChange/page',
+            headers=headers,
+            json=params
+        )
+        print(f"检查任务状态接口调用结果: {response.status_code}")
+        if response.status_code == 200:
+            result = response.json()
+            print(f"响应内容: {result}")
+            
+            # 检查第一个data项的status是否等于3
+            data_list = result.get("data", [])
+            if data_list and len(data_list) > 0:
+                first_data = data_list[0]
+                status = first_data.get("status")
+                if status != "3":
+                    print("解析中 仍未结束")
+                    return status
+                elif status == "4":
+                    print("解析失败，执行邮件预警模块")
+                    return status
+
+            # 解析回执的保文
+            # return parse_task_status(result)
+        else:
+            print(f"错误响应内容: {response.text}")
+    except Exception as e:
+        print(f"调用接口时出错: {e}")
+
+    return None
 
 
 def upload_file_to_third_party(file_path,page):
@@ -460,9 +571,21 @@ if __name__ == '__main__':
     # 主要处理 2 3 4 步骤
     alibaba()
 
-    easyChina()
+    page,status = easyChina()
 
-    fileReturn()
+    if status == "4":
+        logger.info("解析失败")
+        # # 获取文件列表
+        # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika3')
+        # for file_path in all_files:
+        #     print(file_path)
+        #     CostaRicaThree(file_path)
+        #     time.sleep(10)
+        # # 只获取Excel文件
+        # excel_files = get_files_from_directory_with_extension()
+    else:
+        print("解析成功 执行迁移")
+        fileReturn()
 
 
     # 麻涌流程 需要按照顺序来执行

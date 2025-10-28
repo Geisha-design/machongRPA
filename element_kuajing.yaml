@@ -1,9 +1,25 @@
+#config:
+#  mq_ip: 192.168.3.18
+#  mq_vhost: edi_exchange
+#  mq_port: 5672
+#  queue_name: taxes.request.queue
+#  mq_user: edi_exchange
+#  mq_password: Edi@0729#exchange
+#  headless: false
+
+
+
 config:
-  mq_ip: 192.168.3.18
-  mq_vhost: edi_exchange
+  mq_ip: 54.241.193.124
+  mq_vhost: edi_cross_border
   mq_port: 5672
   queue_name: taxes.request.queue
-  mq_user: edi_exchange
-  mq_password: Edi@0729#exchange
+  mq_user: admin
+  mq_password: 1qaz@Smartebao
   headless: false
 
+
+#54.241.193.124:5672
+#vhost: edi_cross_border
+#name: admin
+#password: 1qaz@Smartebao
