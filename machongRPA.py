@@ -410,6 +410,50 @@ def upload_file_to_third_party(file_path,page):
 
 
 
+
+
+
+def fileReturn():
+    """
+    处理文件返回
+    """
+    co = ChromiumOptions()
+    co.existing_only(False)
+    # co = ChromiumOptions().headless()
+    so = SessionOptions()
+    page = WebPage(chromium_options=co, session_or_options=so)
+    page.get(
+        'https://glp.aidc-dchain.com/login?redirectUrl=https%3A%2F%2Fglp.aidc-dchain.com%2FchinaExport%2F9610Export%2FdirectClearnce')
+
+    # logger.info('第一次cookie状态检测')
+    cookiea = page.cookies()
+    dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
+    cookiea = dictionary
+    # logger.info(cookiea)
+    # logger.info('Login status A')
+    # logger.info(cookiea.get('X-XSRF-TOKEN'))
+    if cookiea.get('X-XSRF-TOKEN') is None:
+        logger.info("alibaba登陆中")
+        page.ele('xpath://*[@id="email"]').input('rongyitong002')
+        page.ele('xpath://*[@id="password"]').input('zzk995888zyk')
+        randomSleep()
+        page.ele('xpath://*[@id="member-user-auth-login"]').click()
+        randomSleep()
+        logger.info("alibaba登陆成功")
+
+    else:
+        # logger.info('Second cookie status detection')
+        cookiea = page.cookies()
+        # dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
+        logger.info("alibaba验证已经为登陆状态")
+    # tab = page.latest_tab
+    """
+        检查要求查询的单证信息状态
+        """
+    time.sleep(2)
+
+
+
 if __name__ == '__main__':
 
 
@@ -417,6 +461,9 @@ if __name__ == '__main__':
     alibaba()
 
     easyChina()
+
+    fileReturn()
+
 
     # 麻涌流程 需要按照顺序来执行
     # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika3')
