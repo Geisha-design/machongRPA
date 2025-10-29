@@ -23,6 +23,7 @@ from DrissionPage import WebPage, ChromiumOptions, SessionOptions
 import random
 import requests
 import json
+import pandas as pd
 
 
 def exist(element):
@@ -96,10 +97,19 @@ def alibaba():
     }
     # 准备请求参数
     params = {
-          "manifestCode": "CB10009965715731",
+          "masterWayBill": "99930325330",
           "pageNum": 1,
           "pageSize": 10
         }
+    #
+    # {
+    #     "masterWayBill": "99930325330",
+    #     "pageNum": 1,
+    #     "pageSize": 10
+    # }
+
+
+
     try:
         response = requests.post(
             'https://gcep.aidc-dchain.com/coc/direct/export/manifest/list/search',
@@ -275,7 +285,7 @@ def download_file_from_url(url, save_directory, filename=None):
         return None
 
 
-def download_file_from_url_new(url, save_directory, filename=None , cookies =  None):
+def download_file_from_url_new(url, save_directory, filename=None , cookie_str =  None):
     """
     从URL下载文件并保存到指定目录
 
@@ -308,7 +318,10 @@ def download_file_from_url_new(url, save_directory, filename=None , cookies =  N
 
         # 下载文件
         print(f"开始下载文件: {url}")
-        response = requests.get(url, stream=True,cookies= cookies)
+        headerss = {
+            "Cookie": cookie_str
+        }
+        response = requests.get(url, stream=True,headers= headerss)
         response.raise_for_status()  # 检查请求是否成功
 
         # 保存文件
@@ -331,22 +344,36 @@ def easyChina():
     # co = ChromiumOptions().headless()
     so = SessionOptions()
     page = WebPage(chromium_options=co, session_or_options=so)
-    # page.get('http://192.168.8.35:10118/khi-front-declare')
-    page.get('https://sso-test.zjport.gov.cn:20135/login/khi-declare?service=http%3A%2F%2F192.168.8.35%3A10118%2Fkhi-declare%2FtoIndex%3Fservice%3Dhttp%3A%2F%2F192.168.8.35%3A10118%2Fkhi-front-declare')
+    # page.get('https://sso-test.zjport.gov.cn:20135/login/khi-declare?service=http%3A%2F%2F192.168.8.35%3A10118%2Fkhi-declare%2FtoIndex%3Fservice%3Dhttp%3A%2F%2F192.168.8.35%3A10118%2Fkhi-front-declare')
+    page.get("http://192.168.8.35:10118/khi-front-declare/#/product-name-manage/goods-change")
     # https://sso-test.zjport.gov.cn:20135/login/khi-declare?service=http%3A%2F%2F192.168.8.35%3A10118%2Fkhi-declare%2FtoIndex%3Fservice%3Dhttp%3A%2F%2F192.168.8.35%3A10118%2Fkhi-front-declare
     # logger.info('第一次cookie状态检测')
-    cookiea = page.cookies()
+    # page.get("http://192.168.8.35:10118/khi-front-declare/#/product-name-manage/goods-change")
+
+
+    # ********************************************************
+    cookiea = page.cookies(all_domains= True)
     dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
     cookiea = dictionary
     logger.info(cookiea)
     logger.info('Login status A')
+    time.sleep(5)
+    # ********************************************************
+
     # 登陆前
     # {'CLIENT_ID': 'ecad612f-e662-4811-bf32-71bc65eafd20'}
     # logger.info(cookiea.get('X-XSRF-TOKEN'))
 
     # 登陆后
     # {'APP_CODE': 'khi-declare', 'CLIENT_ID': 'ecad612f-e662-4811-bf32-71bc65eafd20'}
-    if cookiea.get('APP_CODE') is None:
+
+    # page.get("http://192.168.8.35:10118/khi-front-declare/#/product-name-manage/goods-change")
+
+    vflag = page.ele('xpath://*[@id="advanced_search"]/div/div[5]/div/div/div[1]/button',timeout=5)
+
+    # if cookiea.get('APP_CODE') is None:
+    if not vflag:
+    # if vflag is None:
         logger.info("融易通系统登陆中")
         time.sleep(5)
         page.ele('xpath://html/body/div/div/div/div/div/div[2]/div/div[2]/div/form/div[1]/div/div/input').input('ryt')
@@ -356,62 +383,68 @@ def easyChina():
         page.ele('xpath://*[@id="pane-tabCommon"]/form/div[4]/div').click()
         randomSleep()
         logger.info("融易通系统登陆成功")
-        # logger.info(cookiea)
-        # logger.info('Login status B')
+        page.get("http://192.168.8.35:10118/khi-front-declare/#/product-name-manage/goods-change")
+        # time.sleep(3)
+        # page.ele('xpath://*[@id="advanced_search"]/div/div[5]/div/div/div[1]/button').click()
+
+        logger.info('Login status B')
+        cookiea = page.cookies(all_domains=True)
+        logger.info(cookiea)
     else:
         # logger.info('Second cookie status detection')
-        cookiea = page.cookies()
+
+        # print( dictionary)
         # dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
         logger.info("融易通系统验证已经为登陆状态")
+        # page.ele('xpath://*[@id="advanced_search"]/div/div[5]/div/div/div[1]/button').click()
+        # time.sleep(2)
+        cookiea = page.cookies(all_domains=True)
+        dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
+        print( dictionary)
+
     time.sleep(2)
     page.get("http://192.168.8.35:10118/khi-front-declare/#/product-name-manage/goods-change")
     tab = page.latest_tab
     time.sleep(3)
-    file_name = "./downloaded_manifests/CB10009965715731.xlsx"
 
-
-    # ui 手段 暂时屏蔽掉 走无影接口 增加机器人端执行的稳定性
-    # ele = tab('xpath://*[@id="root"]/div[1]/div/div/div/div[2]/div[2]/div/div/div[2]/div/div/div/div/div/div[1]/div/div[1]/button')
-    # ele.click.to_upload(file_name)
-
-    upload_file_to_third_party('./downloaded_manifests/CB10009965715731.xlsx',page)
+    thepath = get_first_file_in_downloaded_manifests("./downloaded_manifests")
+    logger.info("路径为"+ thepath)
+    upload_file_to_third_party(thepath,page)
     # 这里增加一个对转换状态的监听的接口
     # cookies = page.cookies()
-    cookiea = page.cookies()
+    cookiea = page.cookies(all_domains= True)
     dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
     cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookiea])
     while True:
-        status = check_task_status_easyChina(cookiea, None)  # 这里可以传入具体的task_id
+        status ,numberflag,fileName= check_task_status_easyChina(cookiea, None)  # 这里可以传入具体的task_id
+
+
         if status and status == "3":  # 当状态不再是"分析中"时，跳出循环
             print(f"任务状态已变为: {status}，继续执行下一步")
-            download_url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/export?t=1761643111904&id=41&type=change&isBlobRequest=true"
+            download_url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/export?t=1761643111904&id="+str(numberflag)+"&type=change&isBlobRequest=true"
             # 下载文件到指定目录
             save_directory = "./downloaded_manifests_new"
-            downloaded_file = download_file_from_url_new(download_url, save_directory, f"{status}.xlsx",cookie_str)
+            downloaded_file = download_file_from_url_new(download_url, save_directory, "change"+f"{fileName}.xlsx",cookie_str)
             if downloaded_file:
                 print(f"清单文件已保存到: {downloaded_file}")
             else:
                 print("文件下载失败")
-
-
-
             break
         elif status and status == "4":
             print(f"任务状态已变为: {status}，转换失败")
 
             # 需要被注释掉的
-            download_url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/export?t=1761643111904&id=41&type=change&isBlobRequest=true"
+            download_url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/export?t=1761643111904&id="+str(numberflag)+"&type=change&isBlobRequest=true"
             # 下载文件到指定目录
             save_directory = "./downloaded_manifests_new"
-            downloaded_file = download_file_from_url_new(download_url, save_directory, f"{status}.xlsx", cookie_str)
+            # downloaded_file = download_file_from_url_new(download_url, save_directory, f"{numberflag}.xlsx", cookie_str)
+            downloaded_file = download_file_from_url_new(download_url, save_directory, "change"+f"{fileName}.xlsx", cookie_str)
 
             break
         else:
             print("文件任务仍在上传中，等待15秒后重新检查...")
             time.sleep(15)  # 等待30秒后再次检查
-
     return page,status
-
 
 def check_task_status_easyChina(cookies, task_id):
     """
@@ -445,12 +478,17 @@ def check_task_status_easyChina(cookies, task_id):
             if data_list and len(data_list) > 0:
                 first_data = data_list[0]
                 status = first_data.get("status")
+                numberflag = first_data.get("id")
+                fileName = first_data.get("fileName")
                 if status != "3":
                     print("解析中 仍未结束")
-                    return status
+                    return status,numberflag,fileName
                 elif status == "4":
                     print("解析失败，执行邮件预警模块")
-                    return status
+                    return status,numberflag,fileName
+                else:
+                    print("解析成功，执行下载模块")
+                    return status,numberflag,fileName
 
             # 解析回执的保文
             # return parse_task_status(result)
@@ -459,7 +497,7 @@ def check_task_status_easyChina(cookies, task_id):
     except Exception as e:
         print(f"调用接口时出错: {e}")
 
-    return None
+    return None,None,None
 
 
 def upload_file_to_third_party(file_path,page):
@@ -468,14 +506,14 @@ def upload_file_to_third_party(file_path,page):
     :param file_path: 文件路径
     """
     url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/import"
-    cookiea = page.cookies()
+    cookiea = page.cookies(all_domains= True)
     dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
-    cookiea = dictionary
+    # cookiea = dictionary
 
-    # cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookiea])
+    cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookiea])
     # dictionary = {cookie['name']: cookie['value'] for cookie in cookiea}
     headers = {
-        'Cookie': dictionary
+        'Cookie': cookie_str
     }
     # 构造表单数据
     files = {
@@ -485,9 +523,9 @@ def upload_file_to_third_party(file_path,page):
     data = {
         'customer': 'cainiao'
     }
-    print(dictionary)
+    print(cookie_str)
     try:
-        response = requests.post(url, files=files, data=data,cookies=dictionary)
+        response = requests.post(url, files=files, data=data,headers=headers)
         print(f"上传文件接口调用结果: {response.status_code}")
         if response.status_code == 200:
             print(response.text)
@@ -520,8 +558,100 @@ def upload_file_to_third_party(file_path,page):
         files['files[]'][1].close()
 
 
+def parse_excel_data(file_path):
+    """
+    解析Excel文件中的所有数据
+    
+    Args:
+        file_path (str): Excel文件路径
+        
+    Returns:
+        list: 包含每行数据字典的列表
+    """
+    try:
+        # 读取Excel文件
+        df = pd.read_excel(file_path)
+        
+        # 将NaN值替换为空字符串
+        df = df.fillna('')
+        
+        # 转换为列表字典格式
+        data_list = []
+        for index, row in df.iterrows():
+            row_data = {
+                '航班日期': str(row.get('航班日期', '')),
+                '航班号': str(row.get('航班号', '')),
+                '车辆': str(row.get('车辆', '')),
+                '车净重': str(row.get('车净重', '')),
+                '司机': str(row.get('司机', '')),
+                '电话': str(row.get('电话', '')),
+                '白卡号': str(row.get('白卡号', '')),
+                '线路': str(row.get('线路', '')),
+                '票数': str(row.get('票数', '')),
+                '件数': str(row.get('件数', '')),
+                '重量': str(row.get('重量', '')),
+                '主单号': str(row.get('主单号', '').replace('-', '')),
+                '车牌号': str(row.get('车牌号', '')),
+                '特殊渠道': str(row.get('特殊渠道', '')),
+                '口岸检验': str(row.get('口岸检验', '')),
+                '更新日期': str(row.get('更新日期', '')),
+                '更新人': str(row.get('更新人', '')),
+                '客服同学': str(row.get('客服同学', '')),
+                '制单': str(row.get('制单', '')),
+                '风险自查': str(row.get('风险自查', '')),
+                '安检申报': str(row.get('安检申报', '')),
+                'CCSP': str(row.get('CCSP', '')),
+                '体积': str(row.get('体积', '')),
+                '计费重': str(row.get('计费重', '')),
+                '订舱': str(row.get('订舱', '')),
+                '现场同学': str(row.get('现场同学', '')),
+                '现场文件需求': str(row.get('现场文件需求', '')),
+                '交接单': str(row.get('交接单', '')),
+                '打单': str(row.get('打单', '')),
+                '二维码': str(row.get('二维码', '')),
+                '品名清单': str(row.get('品名清单', '')),
+                '申报单': str(row.get('申报单', '')),
+                '粉末保函': str(row.get('粉末保函', ''))
+            }
+            data_list.append(row_data)
+            
+        logger.info(f"成功解析Excel文件，共{len(data_list)}行数据")
+        print(data_list)
+        return data_list
+        
+    except Exception as e:
+        logger.error(f"解析Excel文件时出错: {e}")
+        return []
 
 
+def get_first_file_in_downloaded_manifests(directory):
+    """
+    获取downloaded_manifests目录下第一个文件的路径
+    
+    Returns:
+        str or None: 第一个文件的完整路径，如果目录不存在或为空则返回None
+    """
+    # directory = "./downloaded_manifests"
+    
+    # 检查目录是否存在
+    if not os.path.exists(directory):
+        logger.warning(f"目录 {directory} 不存在")
+        return None
+    
+    # 获取目录下所有文件
+    files = os.listdir(directory)
+    
+    # 过滤掉子目录，只保留文件
+    files = [f for f in files if os.path.isfile(os.path.join(directory, f))]
+    
+    # 如果有文件，返回第一个文件的路径
+    if files:
+        first_file_path = os.path.join(directory, files[0])
+        logger.info(f"找到第一个文件: {first_file_path}")
+        return first_file_path
+    else:
+        logger.warning(f"目录 {directory} 中没有文件")
+        return None
 
 
 def fileReturn():
@@ -566,7 +696,34 @@ def fileReturn():
 
 
 if __name__ == '__main__':
+    easyChina()
+    # import requests
+    #
+    # # 请求URL
+    # url = "http://192.168.8.35:10118/khi-declare/declareGoodsChange/import"
+    # headers = {
+    #     'Cookie': "JSESSIONID=7A00D29E28F31BC1043C2288B569BCB4; APP_CODE=khi-declare; token=23a47b93-3dde-4b8b-95aa-c81e993c9012"
+    # }
+    # # 构造form-data参数
+    # data = {
+    #     "customer": "cainiao"
+    # }
+    #
+    # # 构造文件参数（注意替换本地文件路径）
+    # files = {
+    #     "files[]": open("./downloaded_manifests/CB10008272838600.xlsx", "rb")  # 请确保该文件在本地存在，且路径正确
+    # }
+    #
+    # # 发送POST请求
+    # response = requests.post(url, data=data,files=files, headers=headers)
+    #
+    # # 打印响应结果（以JSON格式解析）
+    # print(response.text)
 
+
+
+
+    # parse_excel_data('./CA融易通报关唯一模板.xlsx')
 
     # 主要处理 2 3 4 步骤
     alibaba()
@@ -575,29 +732,10 @@ if __name__ == '__main__':
 
     if status == "4":
         logger.info("解析失败")
-        # # 获取文件列表
-        # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika3')
-        # for file_path in all_files:
-        #     print(file_path)
-        #     CostaRicaThree(file_path)
-        #     time.sleep(10)
-        # # 只获取Excel文件
-        # excel_files = get_files_from_directory_with_extension()
     else:
         print("解析成功 执行迁移")
         fileReturn()
 
 
     # 麻涌流程 需要按照顺序来执行
-    # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika3')
-    # for file_path in all_files:
-    #     print(file_path)
-    #     CostaRicaThree(file_path)
-    #     time.sleep(10)
-    # # 只获取Excel文件
-    # excel_files = get_files_from_directory_with_extension('/path/to/your/directory', '.xlsx')
-    # for file_path in excel_files:
-    #     print(file_path)
-
-
 

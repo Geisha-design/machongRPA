@@ -82,3 +82,65 @@
 2025-10-28 18:46:05.699 | INFO     | __main__:establish_connection:81 - {'invoiceNo': '', 'invoiceResult': 'ERROR'}
 2025-10-28 18:46:24.905 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
 2025-10-28 18:46:31.079 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 18:46:46.114 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:47:05.150 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:47:10.573 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 18:47:10.573 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167938"}
+2025-10-28 18:47:40.357 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167938', 'invoiceResult': {'arancelarios': '409853.72', 'sobre': '484858.43', 'selectivo': '5386.97', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '32785.97'}}
+2025-10-28 18:47:59.563 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:48:18.618 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:51:58.144 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 18:52:13.177 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:52:32.213 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:52:51.252 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:53:10.305 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:53:29.358 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:53:48.412 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:54:07.462 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:54:26.514 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:54:45.560 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:55:04.610 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:55:23.659 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:55:42.703 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:56:01.759 | ERROR    | __main__:<module>:291 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 18:56:16.017 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 18:56:26.051 | ERROR    | __main__:<module>:291 - 
+2025-10-28 18:56:40.082 | ERROR    | __main__:<module>:291 - 
+2025-10-28 18:57:04.525 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 18:58:33.843 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 18:59:16.850 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 18:59:44.465 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 19:02:40.810 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 19:03:41.391 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 19:03:54.292 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 19:04:08.420 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 19:10:32.976 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人
+2025-10-28 19:10:34.655 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 19:10:34.656 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167937"}
+2025-10-28 19:11:13.184 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167937', 'invoiceResult': {'arancelarios': '364259.41', 'sobre': '419193.07', 'selectivo': '2550.52', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '28331.22'}}
+2025-10-28 19:11:28.406 | ERROR    | __main__:<module>:292 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 19:11:33.557 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 19:11:33.557 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167935"}
+2025-10-28 19:12:22.969 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167935', 'invoiceResult': {'arancelarios': '362614.98', 'sobre': '449539.04', 'selectivo': '9904.07', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '30375.32'}}
+2025-10-28 19:12:42.207 | ERROR    | __main__:<module>:292 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 19:12:47.205 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 19:12:47.206 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167934"}
+2025-10-28 19:13:55.336 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167934', 'invoiceResult': {'arancelarios': '368708.40', 'sobre': '441355.52', 'selectivo': '3927.85', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '29981.98'}}
+2025-10-28 19:14:00.527 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 19:14:00.527 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167933"}
+2025-10-28 19:14:51.822 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167933', 'invoiceResult': {'arancelarios': '388881.27', 'sobre': '494716.68', 'selectivo': '5027.35', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '33711.77'}}
+2025-10-28 19:14:57.597 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 19:14:57.597 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167931"}
+2025-10-28 19:16:02.735 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167931', 'invoiceResult': {'arancelarios': '377660.80', 'sobre': '462321.36', 'selectivo': '6524.66', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '31138.62'}}
+2025-10-28 19:16:21.952 | ERROR    | __main__:<module>:292 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 19:16:27.955 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 19:16:27.955 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167929"}
+2025-10-28 19:17:37.115 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167929', 'invoiceResult': {'arancelarios': '413873.63', 'sobre': '498245.78', 'selectivo': '5933.24', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '33782.90'}}
+2025-10-28 19:17:56.333 | ERROR    | __main__:<module>:292 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 19:18:15.388 | ERROR    | __main__:<module>:292 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 19:18:34.445 | ERROR    | __main__:<module>:292 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 19:18:39.479 | INFO     | __main__:get_release_messages:36 - 剩余未执行指令数量：
+2025-10-28 19:18:39.480 | INFO     | __main__:get_release_messages:39 - 获取的指令：{"invoiceNo":"167940"}
+2025-10-28 19:19:48.751 | INFO     | __main__:fetch_bill_of_lading_data:255 - {'invoiceNo': '167940', 'invoiceResult': {'arancelarios': '265315.93', 'sobre': '303642.13', 'selectivo': '9522.67', 'procomer': '1515.03', 'archivo': '20.00', 'asociacion': '50.00', 'contadores': '2.00', 'Ley6946': '20431.24'}}
+2025-10-28 19:20:07.961 | ERROR    | __main__:<module>:292 - Timeout during AMQP handshake'54.241.193.124'/(<AddressFamily.AF_INET: 2>, <SocketKind.SOCK_STREAM: 1>, 6, '', ('54.241.193.124', 5672)); ssl=False
+2025-10-28 19:21:10.596 | INFO     | __main__:<module>:284 - 开始执行跨境税单RPA机器人

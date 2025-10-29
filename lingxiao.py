@@ -15,7 +15,7 @@ try:
         model="qwen-plus",  # 模型列表：https://help.aliyun.com/zh/model-studio/getting-started/models
         messages=[
             {'role': 'system', 'content': 'You are a helpful assistant.'},
-            {'role': 'user', 'content': '请你检索下易豹网络科技有限公司的董事长是谁？'}
+            {'role': 'user', 'content': '请你检索下易豹网络科技有限公司的监事是谁？'}
             ]
     )
     print(completion.choices[0].message.content)

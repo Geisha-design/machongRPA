@@ -10,7 +10,7 @@
 
 
 config:
-  mq_ip: 54.241.193.124
+  mq_ip: 120.55.171.105
   mq_vhost: edi_cross_border
   mq_port: 5672
   queue_name: taxes.request.queue
@@ -19,7 +19,7 @@ config:
   headless: false
 
 
-#54.241.193.124:5672
+#54.241.193.124:5672 120.55.171.105
 #vhost: edi_cross_border
 #name: admin
 #password: 1qaz@Smartebao

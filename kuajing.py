@@ -283,6 +283,7 @@ if __name__ == '__main__':
     logger.add("跨境-logs/" + f'{today}.log', rotation="1000 MB")
     logger.info("开始执行跨境税单RPA机器人")
     invoiceNo =  ""
+    channel, msg = establish_connection()
     while True:
         try:
             channel,msg =establish_connection()
