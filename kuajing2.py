@@ -1,4 +1,4 @@
-import json
+﻿import json
 import time
 import anyconfig
 import pika
@@ -9,21 +9,30 @@ import random
 # {"invoiceNo": "17772"}
 
 # 到时候专门存一个配置文件 地址
-def baseConfig(divide,key):
-    yaml_config = anyconfig.load('./element_kuajing.yaml', ac_parser="yaml", encodings='gbk')
-    return yaml_config.get(divide).get(key)
+#def baseConfig(divide,key):
+ #   yaml_config = anyconfig.load('element_kuajing.yaml', ac_parser="yaml", encodings='gbk')
+ #   return yaml_config.get(divide).get(key)
 
 # company_name = baseConfig('config','company_name')
-ebao_mq_ip = baseConfig('config','mq_ip')
-ebao_mq_vhost = baseConfig('config','mq_vhost')
-ebao_mq_port = baseConfig('config','mq_port')
-mq_queue_name = baseConfig('config','queue_name')
-ebao_mq_user = baseConfig('config','mq_user')
-ebao_mq_password = baseConfig('config','mq_password')
-theheadless = baseConfig('config','headless')
+#ebao_mq_ip = baseConfig('config','mq_ip')
+#ebao_mq_vhost = baseConfig('config','mq_vhost')
+#ebao_mq_port = baseConfig('config','mq_port')
+#mq_queue_name = baseConfig('config','queue_name')
+#ebao_mq_user = baseConfig('config','mq_user')
+#ebao_mq_password = baseConfig('config','mq_password')
+#theheadless = baseConfig('config','headless')
+
+
+ebao_mq_ip = "120.55.171.105"
+ebao_mq_vhost = "edi_cross_border"
+ebao_mq_port = "5672"
+mq_queue_name = "taxes.request.queue"
+ebao_mq_user = "admin"
+ebao_mq_password = "1qaz@Smartebao"
+
 
 def get_release_messages(channel):
-    mq_queue_name =  baseConfig('config', 'queue_name')
+    mq_queue_name = "taxes.request.queue"
     msg = ''
     msg_count = 0
     method_frame, header_frame, body = channel.basic_get(mq_queue_name)
@@ -47,11 +56,15 @@ def get_release_messages(channel):
 
 
 def establish_connection():
-    ebao_mq_ip = baseConfig('config', 'mq_ip')
-    ebao_mq_vhost = baseConfig('config', 'mq_vhost')
-    ebao_mq_port = baseConfig('config', 'mq_port')
-    ebao_mq_user = baseConfig('config', 'mq_user')
-    ebao_mq_password = baseConfig('config', 'mq_password')
+    
+    ebao_mq_ip = "120.55.171.105"
+    ebao_mq_vhost = "edi_cross_border"
+    ebao_mq_port = "5672" 
+    mq_queue_name = "taxes.request.queue"
+    ebao_mq_user = "admin"
+    ebao_mq_password = "1qaz@Smartebao"
+
+
 
     # ########################## consumer ##########################
     credentials = pika.PlainCredentials(ebao_mq_user, ebao_mq_password)
@@ -118,11 +131,29 @@ def randomSleep():
 def CR(channel,msg):
     result = json.loads(msg)
     invoiceNo = result["invoiceNo"]
-    co = ChromiumOptions()
-    co.existing_only(False)
+
+    # co1 = ChromiumOptions().set_local_port(9111).set_user_data_path('data1')
+    # co2 = ChromiumOptions().set_local_port(9222).set_user_data_path('data2')
+    # browser1 = Chromium(co1)
+    # browser2 = Chromium(co2)
+    # co = ChromiumOptions(co1)
+
+    # co1 = ChromiumOptions().auto_port()
+    co1 = ChromiumOptions().set_local_port(9111)
+
+
+    # browser1 = ChromiumOptions(co1)
+    # browser2 = ChromiumOptions(co)
+
+
+    # co = ChromiumOptions()
+
+
+
+    co1.existing_only(False)
     # co = ChromiumOptions().headless()
     so = SessionOptions()
-    page = WebPage(chromium_options=co, session_or_options=so)
+    page = WebPage(chromium_options=co1, session_or_options=so)
     page.get('https://portaltica.hacienda.go.cr/TicaExterno/hcitelelog.aspx')
     # https: // portaltica.hacienda.go.cr / TicaExterno / hcitelelog.aspx
     randomSleep()
@@ -199,8 +230,8 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
         "archivo": "",
         "asociacion": "",
         "contadores": "",
-        "Ley6946": "",
-        "total":""
+        "Ley6946": ""
+
     }
 
     finalbodyelement = page.ele('xpath://*[@id="Sftributos1ContainerTbl"]/tbody')
@@ -218,9 +249,8 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
         'TIMBRE ASOCIACION AGENTES DE ADUANA LEY 7017': 'asociacion',
         'TIMBRE CONTADORES PRIVADOS DE COSTA RICA': 'contadores',
         'LEY 6946': 'Ley6946',
-        'total':'total'
+        'total': 'total'
     }
-
 
     # 遍历每一行数据
     for index, tr_element in enumerate(tr_elements):
@@ -241,7 +271,6 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
                 tax_data[field_name] = tax_amount
 
     tax_data["total"] = page.ele('xpath://*[@id="span_vTOTP_MN"]').text.replace(",","")
-
 
 
     # 构建最终返回的JSON结构

@@ -443,7 +443,7 @@ def easyChina():
             break
         else:
             print("文件任务仍在上传中，等待15秒后重新检查...")
-            time.sleep(15)  # 等待30秒后再次检查
+            time.sleep(15)  # 等待15秒后再次检查
     return page,status
 
 def check_task_status_easyChina(cookies, task_id):
@@ -457,11 +457,11 @@ def check_task_status_easyChina(cookies, task_id):
 
     # 准备请求参数
     params = {
-  "pageIndex": 1,
-  "pageSize": 10,
-  "createDateStart": "",
-  "createDateEnd": ""
-}
+          "pageIndex": 1,
+          "pageSize": 10,
+          "createDateStart": "",
+          "createDateEnd": ""
+        }
     try:
         response = requests.post(
             'http://192.168.8.35:10118/khi-declare/declareGoodsChange/page',
@@ -656,7 +656,7 @@ def get_first_file_in_downloaded_manifests(directory):
 
 def fileReturn():
     """
-    处理文件返回
+    处理文件返回。99930325330
     """
     co = ChromiumOptions()
     co.existing_only(False)

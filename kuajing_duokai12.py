@@ -9,21 +9,30 @@ import random
 # {"invoiceNo": "17772"}
 
 # 到时候专门存一个配置文件 地址
-def baseConfig(divide,key):
-    yaml_config = anyconfig.load('./element_kuajing.yaml', ac_parser="yaml", encodings='gbk')
-    return yaml_config.get(divide).get(key)
+# def baseConfig(divide,key):
+#   yaml_config = anyconfig.load('element_kuajing.yaml', ac_parser="yaml", encodings='gbk')
+#   return yaml_config.get(divide).get(key)
 
 # company_name = baseConfig('config','company_name')
-ebao_mq_ip = baseConfig('config','mq_ip')
-ebao_mq_vhost = baseConfig('config','mq_vhost')
-ebao_mq_port = baseConfig('config','mq_port')
-mq_queue_name = baseConfig('config','queue_name')
-ebao_mq_user = baseConfig('config','mq_user')
-ebao_mq_password = baseConfig('config','mq_password')
-theheadless = baseConfig('config','headless')
+# ebao_mq_ip = baseConfig('config','mq_ip')
+# ebao_mq_vhost = baseConfig('config','mq_vhost')
+# ebao_mq_port = baseConfig('config','mq_port')
+# mq_queue_name = baseConfig('config','queue_name')
+# ebao_mq_user = baseConfig('config','mq_user')
+# ebao_mq_password = baseConfig('config','mq_password')
+# theheadless = baseConfig('config','headless')
+
+
+ebao_mq_ip = "120.55.171.105"
+ebao_mq_vhost = "edi_cross_border"
+ebao_mq_port = "5672"
+mq_queue_name = "taxes.request.queue"
+ebao_mq_user = "admin"
+ebao_mq_password = "1qaz@Smartebao"
+
 
 def get_release_messages(channel):
-    mq_queue_name =  baseConfig('config', 'queue_name')
+    mq_queue_name = "taxes.request.queue"
     msg = ''
     msg_count = 0
     method_frame, header_frame, body = channel.basic_get(mq_queue_name)
@@ -33,7 +42,7 @@ def get_release_messages(channel):
         delivery_tag = method_frame.delivery_tag
         # 本次获取完毕剩余的个数(不包含本条)
         msg_count = method_frame.message_count
-        logger.info('剩余未执行指令数量：',msg_count)
+        logger.info('剩余未执行指令数量：', msg_count)
         # 获得的数据
         msg = body.decode()
         logger.info('获取的指令：' + msg)
@@ -42,32 +51,33 @@ def get_release_messages(channel):
     else:
         # logger.info('暂无未执行的指令')
         msg_count = -1
-    return msg,msg_count
-
+    return msg, msg_count
 
 
 def establish_connection():
-    ebao_mq_ip = baseConfig('config', 'mq_ip')
-    ebao_mq_vhost = baseConfig('config', 'mq_vhost')
-    ebao_mq_port = baseConfig('config', 'mq_port')
-    ebao_mq_user = baseConfig('config', 'mq_user')
-    ebao_mq_password = baseConfig('config', 'mq_password')
+    ebao_mq_ip = "120.55.171.105"
+    ebao_mq_vhost = "edi_cross_border"
+    ebao_mq_port = "5672"
+    mq_queue_name = "taxes.request.queue"
+    ebao_mq_user = "admin"
+    ebao_mq_password = "1qaz@Smartebao"
 
     # ########################## consumer ##########################
     credentials = pika.PlainCredentials(ebao_mq_user, ebao_mq_password)
-    connection = pika.BlockingConnection(pika.ConnectionParameters(ebao_mq_ip, ebao_mq_port, ebao_mq_vhost, credentials))
+    connection = pika.BlockingConnection(
+        pika.ConnectionParameters(ebao_mq_ip, ebao_mq_port, ebao_mq_vhost, credentials))
     channel = connection.channel()
 
-    msg,msg_count = get_release_messages(channel)
-    if(msg == '' or msg_count == -1 or msg_count is None):
-        #logger.info("没有消息")
+    msg, msg_count = get_release_messages(channel)
+    if (msg == '' or msg_count == -1 or msg_count is None):
+        # logger.info("没有消息")
         return channel, msg
     # 在此处开始编写您的应用
     if (msg != '' and msg_count != -1 and msg_count is not None):
         # 只有有数据的时候才做浏览器数据的初始化
         try:
             print(msg)
-            CR(channel,msg)
+            CR(channel, msg)
         except Exception as e:
             print(e)
             # 构建最终返回的JSON结构
@@ -99,11 +109,13 @@ def exist(element):
     else:
         print("元素不存在")
 
+
 def trNum(ele):
     tbody_element = ele
     tr_count = len(tbody_element.eles('tag:tr'))  # 使用标签选择器
     print(f"tr元素数量: {tr_count}")
     return tr_count
+
 
 def randomSleep():
     # Set random sleep time, range from min_seconds to max_seconds, integer seconds
@@ -115,14 +127,29 @@ def randomSleep():
     # Let the program sleep for this random time
     time.sleep(sleep_time)
 
-def CR(channel,msg):
+
+def CR(channel, msg):
     result = json.loads(msg)
     invoiceNo = result["invoiceNo"]
-    co = ChromiumOptions()
-    co.existing_only(False)
+
+    # co1 = ChromiumOptions().set_local_port(91212).set_user_data_path('data1')
+    # co2 = ChromiumOptions().set_local_port(9222).set_user_data_path('data2')
+    # browser1 = Chromium(co1)
+    # browser2 = Chromium(co2)
+    # co = ChromiumOptions(co1)
+
+    # co1 = ChromiumOptions().auto_port()
+    co1 = ChromiumOptions().set_local_port(9124)
+
+    # browser1 = ChromiumOptions(co1)
+    # browser2 = ChromiumOptions(co)
+
+    # co = ChromiumOptions()
+
+    co1.existing_only(False)
     # co = ChromiumOptions().headless()
     so = SessionOptions()
-    page = WebPage(chromium_options=co, session_or_options=so)
+    page = WebPage(chromium_options=co1, session_or_options=so)
     page.get('https://portaltica.hacienda.go.cr/TicaExterno/hcitelelog.aspx')
     # https: // portaltica.hacienda.go.cr / TicaExterno / hcitelelog.aspx
     randomSleep()
@@ -137,7 +164,7 @@ def CR(channel,msg):
     # 然后获取元素
     bodyele = page.ele('xpath://*[@id="Subfile1ContainerTbl"]/tbody', timeout=10)
     countflag = trNum(bodyele)
-    for i in range(1, countflag+1):
+    for i in range(1, countflag + 1):
         # 格式化数字为4位数，前面补0
         formatted_i = f"{i:04d}"
         element = page.ele(f'xpath://*[@id="span_TELNUME_CORRE_{formatted_i}"]/a')
@@ -154,7 +181,7 @@ def CR(channel,msg):
         print("存在数据")
         thesingle = urllist[0]
         page.get(thesingle)
-        fetch_bill_of_lading_data(page,channel,invoiceNo)
+        fetch_bill_of_lading_data(page, channel, invoiceNo)
     else:
         print("不存在数据")
 
@@ -177,16 +204,10 @@ def CR(channel,msg):
                 delivery_mode=2,  # 使消息持久化
             ))
 
-
-
-
-
     return page
 
 
-
-
-def fetch_bill_of_lading_data(page,channel,invoiceNo):
+def fetch_bill_of_lading_data(page, channel, invoiceNo):
     print("进行数据抓取")
     randomSleep()
     page.ele('xpath://*[@id="TABLE3"]/tbody/tr[2]/td[4]/input').click()
@@ -199,8 +220,8 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
         "archivo": "",
         "asociacion": "",
         "contadores": "",
-        "Ley6946": "",
-        "total":""
+        "Ley6946": ""
+
     }
 
     finalbodyelement = page.ele('xpath://*[@id="Sftributos1ContainerTbl"]/tbody')
@@ -218,9 +239,8 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
         'TIMBRE ASOCIACION AGENTES DE ADUANA LEY 7017': 'asociacion',
         'TIMBRE CONTADORES PRIVADOS DE COSTA RICA': 'contadores',
         'LEY 6946': 'Ley6946',
-        'total':'total'
+        'total': 'total'
     }
-
 
     # 遍历每一行数据
     for index, tr_element in enumerate(tr_elements):
@@ -242,16 +262,12 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
 
     tax_data["total"] = page.ele('xpath://*[@id="span_vTOTP_MN"]').text.replace(",","")
 
-
-
     # 构建最终返回的JSON结构
     jsonreturn = {
         "invoiceNo": invoiceNo,
         "invoiceResult": tax_data
     }
     print("最终数据:", jsonreturn)
-
-
 
     # 消息队列回推消息 json.dumps(main_card_msg, ensure_ascii=False)
     # logger.info("输出异常事件回传消息")
@@ -265,39 +281,31 @@ def fetch_bill_of_lading_data(page,channel,invoiceNo):
             delivery_mode=2,  # 使消息持久化
         ))
 
-
-
-
-
-
-
-
     return jsonreturn
+
 
 # {
 #   "invoiceNo": "172745"
 # }
 
 
-
 if __name__ == '__main__':
     import datetime
+
     today = datetime.datetime.now().strftime('%Y-%m-%d')
     logger.add("跨境-logs/" + f'{today}.log', rotation="1000 MB")
     logger.info("开始执行跨境税单RPA机器人")
-    invoiceNo =  ""
+    invoiceNo = ""
     channel, msg = establish_connection()
     while True:
         try:
-            channel,msg =establish_connection()
+            channel, msg = establish_connection()
             logger.complete()
         except Exception as e:
             logger.error(e)
             logger.complete()
             pass
         time.sleep(4)
-
-
 
     # page = CR()
 
