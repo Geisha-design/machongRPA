@@ -9,6 +9,8 @@ import requests
 import json
 
 
+
+
 def exist(element):
     if element.is_exists:
         print("元素存在")
@@ -35,7 +37,8 @@ def randomSleep():
 def temu():
     # result = json.loads(msg)
     # invoiceNo = result["invoiceNo"]
-    co = ChromiumOptions()
+    # co = ChromiumOptions()
+    co = ChromiumOptions().set_local_port(9116)
     co.existing_only(False)
     # co = ChromiumOptions().headless()
     so = SessionOptions()
@@ -98,6 +101,45 @@ def check_task_status(cookies, task_id):
     return None
 
 
+def check_task_status_bigfile(cookies, task_id,file_path):
+    """
+    检查任务状态
+    """
+    cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
+    headers = {
+        "Cookie": cookie_str
+    }
+
+    # 准备请求参数
+    params = {
+        "regionId": 49,
+        "all": 1,
+        "limit": 10,
+        "pageNum": 1
+    }
+
+    try:
+        response = requests.post(
+            'https://logistics.temu.com/tms/thrall/package/bill/task/pageList',
+            headers=headers,
+            json=params
+        )
+        print(f"检查任务状态接口调用结果: {response.status_code}")
+        if response.status_code == 200:
+            result = response.json()
+            print(f"响应内容: {result}")
+            # 解析回执的保文
+            return parse_task_status_bigfile(result,file_path)
+        else:
+            print(f"错误响应内容: {response.text}")
+    except Exception as e:
+        print(f"调用接口时出错: {e}")
+
+    return None
+
+
+# taskTypeDesc
+
 def parse_task_status(response_data):
     """
     解析任务状态
@@ -113,9 +155,53 @@ def parse_task_status(response_data):
         # 获取第一个任务的状态
         task = task_infos[0]
         status_name = task.get("statusName")
+        # taskTypeDesc = task.get("taskTypeDesc")
+
         print(f"当前任务状态: {status_name}")
+
+        # if taskTypeDesc == "提单excel":
+        #     return CostaRicaFirst(file_name)
+
         return status_name
     
+    return None
+
+
+def parse_task_status_bigfile(response_data,file_path):
+    """
+    解析任务状态
+    """
+    if not response_data.get("success"):
+        print("接口调用失败")
+        return None
+
+    result = response_data.get("result", {})
+    task_infos = result.get("taskInfos", [])
+
+    if task_infos:
+        # 获取第一个任务的状态
+        task = task_infos[0]
+        status_name = task.get("statusName")
+        # taskTypeDesc = task.get("taskTypeDesc")
+        filename = task.get("fileName")
+        file_path = file_path.replace("/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika2/", "")
+
+        print("*"*400)
+        print(file_path)
+        print(filename)
+
+        # 如果filename字段包含在file_path里，则status_name为vv
+        if filename == file_path:
+            status_name = "vv"
+
+
+        print(f"当前任务状态: {status_name}")
+
+        # if taskTypeDesc == "提单excel":
+        #     return CostaRicaFirst(file_name)
+
+        return status_name
+
     return None
 
 
@@ -326,24 +412,38 @@ def CostaRicaThree(file_path):
     tab = page.latest_tab
     elev = tab('xpath://*[@id="__collect_taxes__"]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/div[6]/button')
 
-    vvflag = page.ele('xpath://html/body/div[1]/div/div/div[2]/div[2]/div[2]/div/div/div/div/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/button[2]/span',timeout=5)
+    # vvflag = page.ele('xpath://html/body/div[1]/div/div/div[2]/div[2]/div[2]/div/div/div/div/div/div[1]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/button[2]/span',timeout=5)
     # //*[@id="__collect_taxes__"]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/div[6]/button/svg/use  判断是否存在 不存在就往下执行
     # //*[@id="__collect_taxes__"]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/div[6]/button/svg
-    print('开始检测是否在加载中')
-    print(vvflag.text)
+    # print('开始检测是否在加载中')
+    # print(vvflag.text)
     # time.sleep(400)
     elev.click.to_upload(file_path)
     time.sleep(4)
+    cookies = page.cookies()
+    cookie_str = "; ".join([f"{cookie['name']}={cookie['value']}" for cookie in cookies])
+    headers = {
+        "Cookie": cookie_str
+    }
     while True:
-        if vvflag:
-            print("文件任务检测存在仍在上传中，等待30秒后重新检查...")
-            time.sleep(30)
-            vvflag = page.ele(
-            'xpath://*[@id="__collect_taxes__"]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/div[6]/button/svg',timeout=5)
-        else:
-            print('加载元素不存在')
-            # ele.click.to_upload(file_path)
+
+        status = check_task_status_bigfile(cookies, None,file_path)  # 这里可以传入具体的task_id
+        if status and status == "vv":  # 当状态不再是"分析中"时，跳出循环
+            print(f"任务状态已变为: {status}，继续执行下一步")
             break
+        else:
+            print("文件任务仍在上传中，等待5秒后重新检查...")
+            time.sleep(10)  # 等待30秒后再次检查
+
+        # if vvflag:
+        #     print("文件任务检测存在仍在上传中，等待30秒后重新检查...")
+        #     time.sleep(30)
+        #     vvflag = page.ele(
+        #     'xpath://*[@id="__collect_taxes__"]/div[2]/div[2]/div/div[2]/div[2]/div/div/div/div[6]/button/svg',timeout=5)
+        # else:
+        #     print('加载元素不存在')
+        #     # ele.click.to_upload(file_path)
+        #     break
 
     # time.sleep(8)
     return page
@@ -423,24 +523,26 @@ def get_files_from_directory(directory_path):
 if __name__ == '__main__':
     # temu()
     # 获取所有文件
-    all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika')
-    for file_path in all_files:
-        print(file_path)
-        CostaRicaFirst(file_path)
-        time.sleep(2)
+    # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika')
+    # for file_path in all_files:
+    #     print(file_path)
+    #     CostaRicaFirst(file_path)
+    #     time.sleep(15)
 
-    # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/td')
+    # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika2')
     # for file_path in all_files:
     #     print(file_path)
     #     CostaRicaTwo(file_path)
     #     time.sleep(2)
     #
     #
-    # all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika3')
-    # for file_path in all_files:
-    #     print(file_path)
-    #     CostaRicaThree(file_path)
-    #     time.sleep(2)
+    all_files = get_files_from_directory('/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika2')
+    for file_path in all_files:
+        print(file_path)
+        if file_path == '/Users/qiyuzheng/Desktop/想送项目/ddtemu/saika2/.DS_Store':
+            continue
+        CostaRicaThree(file_path)
+        time.sleep(10)
     # # 只获取Excel文件
     # excel_files = get_files_from_directory_with_extension('/path/to/your/directory', '.xlsx')
     # for file_path in excel_files:
