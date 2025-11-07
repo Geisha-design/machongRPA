@@ -1,45 +1,10 @@
 # 解析JSON数据并存储到MySQL数据库
 import json
 from datetime import datetime
-from database_config import create_connection, create_table, create_table_ar, create_connection_ar
+from database_config import create_connection, create_table, create_connection_ar
 
 
 def parse_and_store_json(json_data):
-    """
-    解析JSON数据并存储到MySQL数据库
-    """
-    # 创建数据库连接
-    connection = create_connection()
-    if connection is None:
-        print("无法建立数据库连接")
-        return
-
-    # 创建数据表
-    create_table(connection)
-
-    # 解析JSON数据
-    try:
-        data = json_data if isinstance(json_data, dict) else json.loads(json_data)
-
-        if data.get('success') and 'resultData' in data and 'serviceData' in data['resultData']:
-            service_data_list = data['resultData']['serviceData']
-
-            # 插入数据到数据库
-            insert_service_data_ar(connection, service_data_list)
-        else:
-            print("JSON数据格式不正确或请求不成功")
-
-    except json.JSONDecodeError as e:
-        print(f"解析JSON数据时出错: {e}")
-    except Exception as e:
-        print(f"处理数据时出错: {e}")
-    # finally:
-    #     if connection.connected():
-    #         connection.close()
-    #         print("MySQL连接已关闭")
-
-
-def parse_and_store_json_ar(json_data):
     """
     解析JSON数据并存储到MySQL数据库
     """
@@ -48,22 +13,22 @@ def parse_and_store_json_ar(json_data):
     if connection is None:
         print("无法建立数据库连接")
         return
-
+    
     # 创建数据表
-    create_table_ar(connection)
-
+    create_table(connection)
+    
     # 解析JSON数据
     try:
         data = json_data if isinstance(json_data, dict) else json.loads(json_data)
-
+        
         if data.get('success') and 'resultData' in data and 'serviceData' in data['resultData']:
             service_data_list = data['resultData']['serviceData']
-
+            
             # 插入数据到数据库
-            insert_service_data_ar(connection, service_data_list)
+            insert_service_data(connection, service_data_list)
         else:
             print("JSON数据格式不正确或请求不成功")
-
+            
     except json.JSONDecodeError as e:
         print(f"解析JSON数据时出错: {e}")
     except Exception as e:
@@ -72,7 +37,6 @@ def parse_and_store_json_ar(json_data):
     #     if connection.connected():
     #         connection.close()
     #         print("MySQL连接已关闭")
-
 
 def convert_datetime_format(date_str):
     """
@@ -86,84 +50,12 @@ def convert_datetime_format(date_str):
     except ValueError:
         return None
 
-
-def insert_service_data_ar(connection, service_data_list):
-    """
-    将服务数据插入到数据库中
-    """
-    cursor = connection.cursor()
-
-    # 准备INSERT语句
-    insert_query = '''
-    INSERT INTO ar (
-        entityId, status, creatorCode, createTime, modifierCode, modifiedTime,
-        clientCode, clientName, rateCardCode, itemCode, accountCode, businessType, 
-        chargeType, businessModelCode, businessCode, referenceCode, logisticsCode, 
-        pl, plName, volume, weight, categoryLevel1Code, categoryLevel1Name, 
-        categoryLevel2Code, categoryLevel2Name, categoryCode, categoryName, 
-        settlementObjectCode, settlementObjectName, settleType, accountBrief, 
-        count, unitPrice, tradeUnit, amount, currency, billedAmount,
-        billedCurrency, settlementAmount, settlementCurrency, accountCurrency,
-        billNo, exchangeRate, myExchangeRate, note, attachment, itemStatus,
-        orderTime, tradeTime, accountingTime, auditor, auditTime,
-        extData1, extData2, extData3, extData4, extData5, extNumber1, extNumber2, 
-        extNumber3, extNumber4, extNumber5, extDecimal1, extDecimal2, extDecimal3, 
-        extDecimal4, extDecimal5, orderAttribute, billCode
-    ) VALUES (
-        %(entityId)s, %(status)s, %(creatorCode)s, %(createTime)s, %(modifierCode)s, %(modifiedTime)s,
-        %(clientCode)s, %(clientName)s, %(rateCardCode)s, %(itemCode)s, %(accountCode)s, %(businessType)s,
-        %(chargeType)s, %(businessModelCode)s, %(businessCode)s, %(referenceCode)s, %(logisticsCode)s,
-        %(pl)s, %(plName)s, %(volume)s, %(weight)s, %(categoryLevel1Code)s, %(categoryLevel1Name)s,
-        %(categoryLevel2Code)s, %(categoryLevel2Name)s, %(categoryCode)s, %(categoryName)s,
-        %(settlementObjectCode)s, %(settlementObjectName)s, %(settleType)s, %(accountBrief)s,
-        %(count)s, %(unitPrice)s, %(tradeUnit)s, %(amount)s, %(currency)s, %(billedAmount)s,
-        %(billedCurrency)s, %(settlementAmount)s, %(settlementCurrency)s, %(accountCurrency)s,
-        %(billNo)s, %(exchangeRate)s, %(myExchangeRate)s, %(note)s, %(attachment)s, %(itemStatus)s,
-        %(orderTime)s, %(tradeTime)s, %(accountingTime)s, %(auditor)s, %(auditTime)s,
-        %(extData1)s, %(extData2)s, %(extData3)s, %(extData4)s, %(extData5)s, %(extNumber1)s, %(extNumber2)s,
-        %(extNumber3)s, %(extNumber4)s, %(extNumber5)s, %(extDecimal1)s, %(extDecimal2)s, %(extDecimal3)s,
-        %(extDecimal4)s, %(extDecimal5)s, %(orderAttribute)s, %(billCode)s
-    ) ON DUPLICATE KEY UPDATE
-        status = VALUES(status),
-        modifierCode = VALUES(modifierCode),
-        modifiedTime = VALUES(modifiedTime),
-        amount = VALUES(amount),
-        settlementAmount = VALUES(settlementAmount)
-    '''
-
-    # 处理每条记录
-    inserted_count = 0
-    for item in service_data_list:
-        try:
-            # 处理日期时间字段
-            processed_item = item.copy()
-            processed_item['createTime'] = convert_datetime_format(item.get('createTime'))
-            processed_item['modifiedTime'] = convert_datetime_format(item.get('modifiedTime'))
-            processed_item['orderTime'] = convert_datetime_format(item.get('orderTime'))
-            processed_item['tradeTime'] = convert_datetime_format(item.get('tradeTime'))
-            processed_item['accountingTime'] = convert_datetime_format(item.get('accountingTime'))
-            processed_item['auditTime'] = convert_datetime_format(item.get('auditTime'))
-
-            # 执行插入操作
-            cursor.execute(insert_query, processed_item)
-            inserted_count += 1
-
-        except Exception as e:
-            print(f"插入数据时出错 (entityId: {item.get('entityId')}): {e}")
-            connection.rollback()
-
-    # 提交事务
-    connection.commit()
-    print(f"成功插入 {inserted_count} 条记录到数据库")
-    cursor.close()
-
-
 def insert_service_data(connection, service_data_list):
     """
     将服务数据插入到数据库中
     """
     cursor = connection.cursor()
-
+    
     # 准备INSERT语句
     insert_query = '''
     INSERT INTO service_data (
@@ -199,7 +91,7 @@ def insert_service_data(connection, service_data_list):
         amount = VALUES(amount),
         settlementAmount = VALUES(settlementAmount)
     '''
-
+    
     # 处理每条记录
     inserted_count = 0
     for item in service_data_list:
@@ -210,20 +102,19 @@ def insert_service_data(connection, service_data_list):
             processed_item['modifiedTime'] = convert_datetime_format(item.get('modifiedTime'))
             processed_item['tradeTime'] = convert_datetime_format(item.get('tradeTime'))
             processed_item['auditTime'] = convert_datetime_format(item.get('auditTime'))
-
+            
             # 执行插入操作
             cursor.execute(insert_query, processed_item)
             inserted_count += 1
-
+            
         except Exception as e:
             print(f"插入数据时出错 (entityId: {item.get('entityId')}): {e}")
             connection.rollback()
-
+    
     # 提交事务
     connection.commit()
     print(f"成功插入 {inserted_count} 条记录到数据库")
     cursor.close()
-
 
 # 示例JSON数据
 sample_json_data = {
@@ -497,8 +388,11 @@ sample_json_data = {
 }
 
 if __name__ == "__main__":
+
+
     # for i in range(1, 24742):
     #     api_call()
+
 
     # 解析并存储示例JSON数据
     parse_and_store_json(sample_json_data)

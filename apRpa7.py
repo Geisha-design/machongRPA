@@ -11,11 +11,11 @@ def api_call(i,location):
     ]
   },
   "pageNum": i,
-  "pageSize": 20000,
+  "pageSize": 2,
   "orderBy": "createTime desc"
 }
 
-
+    # https: // ship.horizonlogisticshub.com / services / ams / billitem / querylist
 
     headers = {"Token": "j5Axr4US1Gcs8SWIPaRo3z5idTQkq2uPZ44okcd6pVZ+x49PoLJCsm7CHHUBZ9WFdgogUaGkPXHCg4HpiPfU+1XZDFaKx9sZgCM3oXuRXAhtTykfHM1hzjH7hLagmXBui+VJ/yDql0euqgkp24vZX3VCF7scoiptbFOGQfErCbc="}
     try:
