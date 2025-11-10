@@ -28,7 +28,7 @@ def api_call(i, location):
 
     headers = {"Token": "THQDISGHFZsmleYRkqV6ccGJ70SHPACFkuIpsSnDWmjAXtV+y5A2zf09piQTbFaDBUvimXsTN585UQ971AKwC3Dgu/LNtV6/C1qoGe2hoOIASFq7S56CbsknB1tFl0YSLj37fTv693d+FTpGYcyaHPYhh4UfoZ8mjcVlVQkbUDc="}
     # THQDISGHFZsmleYRkqV6ccGJ70SHPACFkuIpsSnDWmjAXtV + y5A2zf09piQTbFaDBUvimXsTN585UQ971AKwC3Dgu / LNtV6 / C1qoGe2hoOIASFq7S56CbsknB1tFl0YSLj37fTv693d + FTpGYcyaHPYhh4UfoZ8mjcVlVQkbUDc =
-    # THQDISGHFZsmleYRkqV6ccGJ70SHPACFkuIpsSnDWmjAXtV + y5A2zf09piQTbFaDBUvimXsTN585UQ971AKwC3Dgu / LNtV6 / C1qoGe2hoOIASFq7S56CbsknB1tFl0YSLj37fTv693d + FTpGYcyaHPYhh4UfoZ8mjcVlVQkbUDc =
+
     try:
         response = requests.post(
             'https://ship.horizonlogisticshub.com/services/ams/billitem/querylist',
@@ -147,45 +147,30 @@ if __name__ == '__main__':
     # 如果需要调用API，请取消注释下面的代码
 
     # 创建一个列表来存储失败的页码
+    failed_pages = []
 
-    failed_pagess = [
-        277,
-        114,
-        117,
-        379,
-        115,
-        278,
-        118,
-        380,
-        279,
-        119,
-        381
-
-    ]
-
-
-    for i in failed_pagess:
+    for i in range(371, 430):
         try:
             success = api_call(i, "SJO-COST-H-CUST")
             if success:
                 print(f"第{i}页数据处理完成")
             else:
                 print(f"第{i}页数据处理失败")
-                failed_pagess.append(i)
+                failed_pages.append(i)
                 # 实时记录失败的页码到本地txt文件
                 with open("failed_pages.txt", "a", encoding="utf-8") as f:
                     f.write(f"{i}\n")
         except Exception as e:
             print(f"第{i}页数据处理失败: {e}")
-            failed_pagess.append(i)
+            failed_pages.append(i)
             # 实时记录失败的页码到本地txt文件
             with open("failed_pages.txt", "a", encoding="utf-8") as f:
                 f.write(f"{i}\n")
         # api_call(i, "SJO-COST-H-CUST")
 
     # 将失败的页码写入本地txt文件
-    if failed_pagess:
-        print(f"共有 {len(failed_pagess)} 个页面处理失败，页码已实时保存到 failed_pages.txt 文件中")
+    if failed_pages:
+        print(f"共有 {len(failed_pages)} 个页面处理失败，页码已实时保存到 failed_pages.txt 文件中")
     else:
         print("所有页面都处理成功")
 
