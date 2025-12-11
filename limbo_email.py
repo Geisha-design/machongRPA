@@ -336,6 +336,129 @@ class EmailParser:
         df.to_csv(filename, index=False, encoding='utf-8')
         print(f"已保存 {len(emails)} 封邮件到 {filename}")
 
+    def fetch_customs_emails(self, folder: str = "INBOX", limit: Optional[int] = None,
+                             save_path: str = "./email_results") -> List[Dict]:
+        """
+        获取并解析指定文件夹中标题包含"报关资料"且包含"版本号"的邮件，保存到对应文件夹
+
+        Args:
+            folder: 邮箱文件夹名称
+            limit: 限制获取的邮件数量，None表示获取所有
+            save_path: 保存结果的基础路径
+
+        Returns:
+            List[Dict]: 解析后的邮件列表
+        """
+        if not self.mail:
+            raise Exception("未连接到邮箱服务器")
+
+        # 创建文件夹结构
+        folder_path = self.create_folder_structure(save_path, folder)
+        attachments_path = os.path.join(folder_path, "attachments")
+
+        # 选择文件夹
+        total_messages = self.select_folder(folder)
+        print(f"文件夹 '{folder}' 中共有 {total_messages} 封邮件")
+
+        # 确定要获取的邮件数量
+        count = min(limit, total_messages) if limit else total_messages
+
+        emails = []
+        processed_count = 0
+
+        # 按照从新到旧的顺序获取邮件
+        for i in range(total_messages, max(0, total_messages - count), -1):
+            try:
+                # 获取邮件
+                status, msg_data = self.mail.fetch(str(i), "(RFC822)")
+                if status != 'OK':
+                    continue
+
+                # 解析邮件
+                for response_part in msg_data:
+                    if isinstance(response_part, tuple):
+                        msg = email.message_from_bytes(response_part[1])
+
+                        # 检查邮件主题是否符合条件
+                        subject = msg["Subject"]
+                        if subject:
+                            # 解码主题
+                            decoded_subject, encoding = decode_header(subject)[0]
+                            if isinstance(decoded_subject, bytes):
+                                decoded_subject = decoded_subject.decode(encoding or 'utf-8')
+
+                            # 检查是否包含"报关资料"和"版本号"
+                            if "报关资料" in decoded_subject and "版本号" in decoded_subject:
+                                parsed_email = self.parse_email_content(msg, attachments_path)
+                                parsed_email['id'] = i
+                                emails.append(parsed_email)
+                                processed_count += 1
+                                print(f"找到符合条件的邮件 {processed_count}: {decoded_subject}")
+                        break
+
+            except Exception as e:
+                print(f"获取第 {i} 封邮件时出错: {e}")
+                continue
+
+        # 保存CSV文件
+        if emails:
+            csv_path = os.path.join(folder_path, f"{folder}_customs_emails.csv")
+            self.save_to_csv(emails, csv_path)
+
+        print(f"总共找到 {len(emails)} 封符合条件的邮件")
+        return emails
+
+
+# def main():
+#     """
+#     主函数示例：如何使用邮件解析助手
+#     """
+#     # 配置邮箱信息
+#     EMAIL_ADDRESS = "qiyz@smartebao.com"
+#     PASSWORD = "HHnDyT5v7beJ9Mog"  # 建议使用应用专用密码
+#
+#     # 创建邮件解析助手实例
+#     parser = EmailParser(EMAIL_ADDRESS, PASSWORD)
+#
+#     try:
+#         # 连接到邮箱
+#         if not parser.connect():
+#             return
+#
+#         print("成功连接到邮箱")
+#
+#         # 获取所有文件夹
+#         folders = parser.get_mailboxes()
+#         print(f"可用的邮箱文件夹: {folders[:5]}...")  # 只显示前5个
+#
+#         # 解析收件箱中的邮件，保存到指定文件夹
+#         emails = parser.fetch_emails(
+#             folder="INBOX",
+#             limit=1000,  # 限制获取前10封
+#             save_path="./email_results"  # 保存到当前目录下的email_results文件夹
+#         )
+#
+#         # 显示结果
+#         print(f"\n成功解析 {len(emails)} 封邮件:")
+#         for i, email_info in enumerate(emails[:3]):  # 只显示前3封
+#             print(f"\n--- 邮件 {i+1} ---")
+#             print(f"主题: {email_info['subject']}")
+#             print(f"发件人: {email_info['from']}")
+#             print(f"日期: {email_info['date']}")
+#             if email_info['attachments']:
+#                 print(f"附件: {len(email_info['attachments'])} 个")
+#             print(f"正文预览: {email_info['body_text'][:100]}...")
+#
+#     except Exception as e:
+#         print(f"处理过程中出现错误: {e}")
+#
+#     finally:
+#         # 断开连接
+#         parser.disconnect()
+
+
+
+
 def main():
     """
     主函数示例：如何使用邮件解析助手
@@ -354,19 +477,15 @@ def main():
 
         print("成功连接到邮箱")
 
-        # 获取所有文件夹
-        folders = parser.get_mailboxes()
-        print(f"可用的邮箱文件夹: {folders[:5]}...")  # 只显示前5个
-
-        # 解析收件箱中的邮件，保存到指定文件夹
-        emails = parser.fetch_emails(
+        # 解析收件箱中符合条件的邮件，保存到指定文件夹
+        emails = parser.fetch_customs_emails(
             folder="INBOX",
-            limit=1000,  # 限制获取前10封
+            limit=100,  # 限制处理邮件数量
             save_path="./email_results"  # 保存到当前目录下的email_results文件夹
         )
 
         # 显示结果
-        print(f"\n成功解析 {len(emails)} 封邮件:")
+        print(f"\n成功解析 {len(emails)} 封符合条件的邮件:")
         for i, email_info in enumerate(emails[:3]):  # 只显示前3封
             print(f"\n--- 邮件 {i+1} ---")
             print(f"主题: {email_info['subject']}")
