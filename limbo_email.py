@@ -6,6 +6,7 @@ from typing import List, Dict, Optional
 import os
 import re
 from datetime import datetime
+import openpyxl
 
 class EmailParser:
     """
@@ -404,10 +405,71 @@ class EmailParser:
         if emails:
             csv_path = os.path.join(folder_path, f"{folder}_customs_emails.csv")
             self.save_to_csv(emails, csv_path)
+            
+            # 提取报关资料并保存到Excel
+            self.extract_customs_info_to_excel(emails, save_path)
 
         print(f"总共找到 {len(emails)} 封符合条件的邮件")
         return emails
 
+    def extract_customs_info_to_excel(self, emails: List[Dict], save_path: str = "./email_results"):
+        """
+        从符合条件的邮件中提取报关资料信息并保存到Excel文件
+
+        Args:
+            emails: 解析后的邮件列表
+            save_path: 保存结果的基础路径
+        """
+        customs_data = []
+        
+        for email_info in emails:
+            subject = email_info.get('subject', '')
+            body_text = email_info.get('body_text', '')
+            
+            # 使用正则表达式提取信息
+            # 提取提单号 (从主题中)
+            bl_no_match = re.search(r'(\d+-\d+)\s+报关资料', subject)
+            bl_no = bl_no_match.group(1) if bl_no_match else ''
+            
+            # 提取其他信息 (从正文中)
+            gross_weight_match = re.search(r'提单总毛重[：:]\s*(\d+\.?\d*)\s*KG', body_text)
+            gross_weight = gross_weight_match.group(1) if gross_weight_match else ''
+            
+            cartons_match = re.search(r'大箱个数[：:]\s*(\d+(?:\.\d+)?)\s*个?', body_text)
+            cartons = cartons_match.group(1) if cartons_match else ''
+            
+            packages_match = re.search(r'包裹个数[：:]\s*(\d+(?:\.\d+)?)\s*个?', body_text)
+            packages = packages_match.group(1) if packages_match else ''
+            
+            volume_match = re.search(r'总体积[：:]\s*(\d+\.?\d*)\s*CBM', body_text)
+            volume = volume_match.group(1) if volume_match else ''
+            
+            # 添加到数据列表
+            customs_data.append({
+                '主题': subject,
+                '提单号': bl_no,
+                '提单总毛重(KG)': gross_weight,
+                '大箱个数': cartons,
+                '包裹个数': packages,
+                '总体积(CBM)': volume
+            })
+        
+        # 保存到Excel文件
+        if customs_data:
+            df = pd.DataFrame(customs_data)
+            # 创建文件夹结构
+            excel_folder_path = os.path.join(save_path, "报关资料")
+            os.makedirs(excel_folder_path, exist_ok=True)
+            
+            # 生成带时间戳的文件名
+            timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+            excel_path = os.path.join(excel_folder_path, f"customs_info_{timestamp}.xlsx")
+            
+            # 保存到Excel
+            df.to_excel(excel_path, index=False, engine='openpyxl')
+            print(f"已保存报关资料到 {excel_path}")
+        else:
+            print("没有提取到报关资料信息")
 
 # def main():
 #     """
