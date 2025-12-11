@@ -7,6 +7,10 @@ import os
 import re
 from datetime import datetime
 import openpyxl
+import warnings
+
+# 忽略 openpyxl 的样式相关警告
+warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl.styles.stylesheet')
 
 class EmailParser:
     """
@@ -456,7 +460,6 @@ class EmailParser:
         
         # 保存到Excel文件
         if customs_data:
-            df = pd.DataFrame(customs_data)
             # 创建文件夹结构
             excel_folder_path = os.path.join(save_path, "报关资料")
             os.makedirs(excel_folder_path, exist_ok=True)
@@ -465,7 +468,47 @@ class EmailParser:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             excel_path = os.path.join(excel_folder_path, f"customs_info_{timestamp}.xlsx")
             
+            # 从附件中提取目的地国家信息
+            destination_countries = []
+            for email_info in emails:
+                attachments = email_info.get('attachments', [])
+                country = None
+                
+                # 检查每个附件
+                for attachment_path in attachments:
+                    try:
+                        # 读取Excel文件
+                        df_attachment = pd.read_excel(attachment_path)
+                        
+                        # 查找'目的地国家'列
+                        if '目的地国家' in df_attachment.columns:
+                            # 获取所有目的地国家
+                            countries_in_file = df_attachment['目的地国家'].dropna().tolist()
+                            
+                            # 如果有多个国家，取第一个作为代表
+                            if countries_in_file:
+                                country = countries_in_file[0]
+                                break
+                    except Exception as e:
+                        print(f"读取附件 {attachment_path} 时出错: {e}")
+                        continue
+                
+                # 添加到结果列表
+                destination_countries.append(country or '')
+            
+            # 将目的地国家信息添加到数据中
+            for i, data in enumerate(customs_data):
+                data['目的地国家'] = destination_countries[i] if i < len(destination_countries) else ''
+            
+            # 创建DataFrame
+            df = pd.DataFrame(customs_data)
+            
             # 保存到Excel
+            import warnings
+
+            # 忽略 openpyxl 的样式相关警告 直接无视
+            warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
+
             df.to_excel(excel_path, index=False, engine='openpyxl')
             print(f"已保存报关资料到 {excel_path}")
         else:
