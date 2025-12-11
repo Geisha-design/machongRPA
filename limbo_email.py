@@ -514,56 +514,6 @@ class EmailParser:
         else:
             print("没有提取到报关资料信息")
 
-# def main():
-#     """
-#     主函数示例：如何使用邮件解析助手
-#     """
-#     # 配置邮箱信息
-#     EMAIL_ADDRESS = "qiyz@smartebao.com"
-#     PASSWORD = "HHnDyT5v7beJ9Mog"  # 建议使用应用专用密码
-#
-#     # 创建邮件解析助手实例
-#     parser = EmailParser(EMAIL_ADDRESS, PASSWORD)
-#
-#     try:
-#         # 连接到邮箱
-#         if not parser.connect():
-#             return
-#
-#         print("成功连接到邮箱")
-#
-#         # 获取所有文件夹
-#         folders = parser.get_mailboxes()
-#         print(f"可用的邮箱文件夹: {folders[:5]}...")  # 只显示前5个
-#
-#         # 解析收件箱中的邮件，保存到指定文件夹
-#         emails = parser.fetch_emails(
-#             folder="INBOX",
-#             limit=1000,  # 限制获取前10封
-#             save_path="./email_results"  # 保存到当前目录下的email_results文件夹
-#         )
-#
-#         # 显示结果
-#         print(f"\n成功解析 {len(emails)} 封邮件:")
-#         for i, email_info in enumerate(emails[:3]):  # 只显示前3封
-#             print(f"\n--- 邮件 {i+1} ---")
-#             print(f"主题: {email_info['subject']}")
-#             print(f"发件人: {email_info['from']}")
-#             print(f"日期: {email_info['date']}")
-#             if email_info['attachments']:
-#                 print(f"附件: {len(email_info['attachments'])} 个")
-#             print(f"正文预览: {email_info['body_text'][:100]}...")
-#
-#     except Exception as e:
-#         print(f"处理过程中出现错误: {e}")
-#
-#     finally:
-#         # 断开连接
-#         parser.disconnect()
-
-
-
-
 def main():
     """
     主函数示例：如何使用邮件解析助手
