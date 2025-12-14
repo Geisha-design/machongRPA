@@ -13,6 +13,93 @@ import warnings
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl.styles.stylesheet')
 
 class EmailParser:
+    # 在 EmailParser 类中添加以下方法:
+
+    def parse_eml_file(self, eml_path: str, save_path: str = "./eml_results") -> Dict:
+        """
+        解析本地EML格式邮件文件
+
+        Args:
+            eml_path: EML文件路径
+            save_path: 结果保存路径
+
+        Returns:
+            Dict: 解析后的邮件信息
+        """
+        # 创建结果保存目录
+        os.makedirs(save_path, exist_ok=True)
+        attachments_path = os.path.join(save_path, "attachments")
+        os.makedirs(attachments_path, exist_ok=True)
+
+        # 读取并解析EML文件
+        with open(eml_path, 'rb') as f:
+            msg = email.message_from_bytes(f.read())
+
+        # 使用现有的parse_email_content方法解析邮件
+        parsed_email = self.parse_email_content(msg, attachments_path)
+
+        # 生成唯一ID（基于文件名和时间戳）
+        filename = os.path.basename(eml_path)
+        unique_id = f"eml_{filename}_{int(datetime.now().timestamp())}"
+        parsed_email['id'] = unique_id
+
+        # 提取报关资料信息
+        subject = parsed_email.get('subject', '')
+        body_text = parsed_email.get('body_text', '')
+        
+        # 使用正则表达式提取信息
+        # 提取提单号 (从主题中)
+        bl_no_match = re.search(r'(\d+-\d+)\s+报关资料', subject)
+        bl_no = bl_no_match.group(1) if bl_no_match else ''
+        
+        # 提取其他信息 (从正文中)
+        gross_weight_match = re.search(r'提单总毛重[：:]\s*(\d+\.?\d*)\s*KG', body_text)
+        gross_weight = gross_weight_match.group(1) if gross_weight_match else ''
+        
+        cartons_match = re.search(r'大箱个数[：:]\s*(\d+(?:\.\d+)?)\s*个?', body_text)
+        cartons = cartons_match.group(1) if cartons_match else ''
+        
+        packages_match = re.search(r'包裹个数[：:]\s*(\d+(?:\.\d+)?)\s*个?', body_text)
+        packages = packages_match.group(1) if packages_match else ''
+        
+        volume_match = re.search(r'总体积[：:]\s*(\d+\.?\d*)\s*CBM', body_text)
+        volume = volume_match.group(1) if volume_match else ''
+        
+        # 从附件中提取目的地国家信息
+        destination_country = ''
+        attachments = parsed_email.get('attachments', [])
+        for attachment_path in attachments:
+            try:
+                # 读取Excel文件
+                df_attachment = pd.read_excel(attachment_path)
+                
+                # 查找'目的地国家'列
+                if '目的地国家' in df_attachment.columns:
+                    # 获取所有目的地国家
+                    countries_in_file = df_attachment['目的地国家'].dropna().tolist()
+                    
+                    # 如果有多个国家，取第一个作为代表
+                    if countries_in_file:
+                        destination_country = countries_in_file[0]
+                        break
+            except Exception as e:
+                print(f"读取附件 {attachment_path} 时出错: {e}")
+                continue
+        
+        # 将提取的信息添加到解析结果中
+        parsed_email['提单号'] = bl_no
+        parsed_email['提单总毛重(KG)'] = gross_weight
+        parsed_email['大箱个数'] = cartons
+        parsed_email['包裹个数'] = packages
+        parsed_email['总体积(CBM)'] = volume
+        parsed_email['目的地国家'] = destination_country
+
+        # 保存CSV文件
+        csv_path = os.path.join(save_path, f"{filename}_parsed.csv")
+        self.save_to_csv([parsed_email], csv_path)
+
+        return parsed_email
+
     """
     邮件解析助手类，用于连接邮箱并解析所有邮件
     支持将解析结果保存到对应文件夹，包括CSV文件和附件
@@ -191,45 +278,52 @@ class EmailParser:
         body_html = ""
         attachments = []
 
-        if msg.is_multipart():
-            for part in msg.walk():
-                content_type = part.get_content_type()
-                content_disposition = str(part.get("Content-Disposition"))
+        try:
+            if msg.is_multipart():
+                for part in msg.walk():
+                    content_type = part.get_content_type()
+                    content_disposition = str(part.get("Content-Disposition"))
 
-                # 处理附件
-                if "attachment" in content_disposition:
-                    attachment_path = self.save_attachment(part, folder_path)
-                    if attachment_path:
-                        attachments.append(attachment_path)
-                    continue
+                    # 处理附件
+                    if "attachment" in content_disposition:
+                        attachment_path = self.save_attachment(part, folder_path)
+                        if attachment_path:
+                            attachments.append(attachment_path)
+                        continue
 
-                # 处理正文内容
+                    # 处理正文内容
+                    try:
+                        payload = part.get_payload(decode=True)
+                        if payload:
+                            charset = part.get_content_charset() or 'utf-8'
+                            content = payload.decode(charset, errors='ignore')
+
+                            if content_type == "text/plain":
+                                body_text += content
+                            elif content_type == "text/html":
+                                body_html += content
+                    except Exception as e:
+                        print(f"解析邮件正文出错: {e}")
+            else:
+                content_type = msg.get_content_type()
                 try:
-                    payload = part.get_payload(decode=True)
+                    payload = msg.get_payload(decode=True)
                     if payload:
-                        charset = part.get_content_charset() or 'utf-8'
+                        charset = msg.get_content_charset() or 'utf-8'
                         content = payload.decode(charset, errors='ignore')
 
                         if content_type == "text/plain":
-                            body_text += content
+                            body_text = content
                         elif content_type == "text/html":
-                            body_html += content
+                            body_html = content
                 except Exception as e:
                     print(f"解析邮件正文出错: {e}")
-        else:
-            content_type = msg.get_content_type()
-            try:
-                payload = msg.get_payload(decode=True)
-                if payload:
-                    charset = msg.get_content_charset() or 'utf-8'
-                    content = payload.decode(charset, errors='ignore')
-
-                    if content_type == "text/plain":
-                        body_text = content
-                    elif content_type == "text/html":
-                        body_html = content
-            except Exception as e:
-                print(f"解析邮件正文出错: {e}")
+        except Exception as e:
+            # 记录解析失败的邮件信息到文件
+            error_info = f"邮件解析失败 - 主题: {subject}, 发件人: {from_}, 错误: {str(e)}\n"
+            with open("saikavv.txt", "a", encoding="utf-8") as f:
+                f.write(error_info)
+            print(f"邮件解析异常已记录到saikavv.txt: {subject}")
 
         return {
             "subject": subject,
@@ -299,19 +393,43 @@ class EmailParser:
                 # 获取邮件
                 status, msg_data = self.mail.fetch(str(i), "(RFC822)")
                 if status != 'OK':
+                    # 记录获取失败的邮件ID
+                    error_info = f"获取邮件失败 - 邮件ID: {i}, 状态: {status}\n"
+                    with open("saikavv.txt", "a", encoding="utf-8") as f:
+                        f.write(error_info)
                     continue
 
                 # 解析邮件
+                email_parsed = False
                 for response_part in msg_data:
                     if isinstance(response_part, tuple):
-                        msg = email.message_from_bytes(response_part[1])
-                        parsed_email = self.parse_email_content(msg, attachments_path)
-                        parsed_email['id'] = i
-                        emails.append(parsed_email)
-                        break
+                        try:
+                            msg = email.message_from_bytes(response_part[1])
+                            parsed_email = self.parse_email_content(msg, attachments_path)
+                            parsed_email['id'] = i
+                            emails.append(parsed_email)
+                            email_parsed = True
+                            break
+                        except Exception as e:
+                            # 记录解析失败的邮件ID和错误信息
+                            error_info = f"解析邮件失败 - 邮件ID: {i}, 错误: {str(e)}\n"
+                            with open("saikavv.txt", "a", encoding="utf-8") as f:
+                                f.write(error_info)
+                            print(f"邮件 {i} 解析异常已记录到saikavv.txt")
+                            continue
 
+                # 如果没有解析邮件但获取成功，也记录一下
+                if not email_parsed and status == 'OK':
+                    error_info = f"解析邮件失败 - 邮件ID: {i}, 未能正确解析邮件内容\n"
+                    with open("saikavv.txt", "a", encoding="utf-8") as f:
+                        f.write(error_info)
+                        
             except Exception as e:
-                print(f"获取第 {i} 封邮件时出错: {e}")
+                # 记录获取邮件时的异常
+                error_info = f"获取邮件异常 - 邮件ID: {i}, 错误: {str(e)}\n"
+                with open("saikavv.txt", "a", encoding="utf-8") as f:
+                    f.write(error_info)
+                print(f"邮件 {i} 获取异常已记录到saikavv.txt")
                 continue
 
         # 保存CSV文件
@@ -514,13 +632,18 @@ class EmailParser:
         else:
             print("没有提取到报关资料信息")
 
-def main():
+def main2():
     """
     主函数示例：如何使用邮件解析助手
     """
     # 配置邮箱信息
-    EMAIL_ADDRESS = "qiyz@smartebao.com"
-    PASSWORD = "HHnDyT5v7beJ9Mog"  # 建议使用应用专用密码
+    # EMAIL_ADDRESS = "qiyz@smartebao.com"
+    # PASSWORD = "HHnDyT5v7beJ9Mog"  # 建议使用应用专用密码
+    # info @ ueasychina.com
+    # Ryt0218!
+    EMAIL_ADDRESS = "info@ueasychina.com"
+    PASSWORD = "N9cDiJrFEbe3KSI7"  # 建议使用应用专用密码
+
 
     # 创建邮件解析助手实例
     parser = EmailParser(EMAIL_ADDRESS, PASSWORD)
@@ -531,12 +654,19 @@ def main():
             return
 
         print("成功连接到邮箱")
+        
+        # 获取所有可用的邮箱文件夹
+        folders = parser.get_mailboxes()
+        print("可用的邮箱文件夹:")
+        for folder in folders:
+            print(f"- {folder}")
 
         # 解析收件箱中符合条件的邮件，保存到指定文件夹
         emails = parser.fetch_customs_emails(
+        # emails=parser.fetch_emails(
             folder="INBOX",
-            limit=100,  # 限制处理邮件数量
-            save_path="./email_results"  # 保存到当前目录下的email_results文件夹
+            limit=1000,  # 限制处理邮件数量
+            save_path="/Volumes/Samsung/vos/email_results"  # 保存到当前目录下的email_results文件夹
         )
 
         # 显示结果
@@ -557,5 +687,156 @@ def main():
         # 断开连接
         parser.disconnect()
 
+
+
+def batch_parse_eml_files(self, eml_folder: str, save_path: str = "./eml_results") -> List[Dict]:
+    """
+    批量解析文件夹中的EML邮件文件
+
+    Args:
+        eml_folder: 包含EML文件的文件夹路径
+        save_path: 结果保存路径
+
+    Returns:
+        List[Dict]: 解析后的邮件列表
+    """
+    # 获取所有EML文件
+    eml_files = [f for f in os.listdir(eml_folder) if f.lower().endswith('.eml')]
+
+    if not eml_files:
+        print(f"在 {eml_folder} 中未找到EML文件")
+        return []
+
+    print(f"找到 {len(eml_files)} 个EML文件")
+
+    # 创建结果保存目录
+    os.makedirs(save_path, exist_ok=True)
+    attachments_path = os.path.join(save_path, "attachments")
+    os.makedirs(attachments_path, exist_ok=True)
+
+    emails = []
+    for eml_file in eml_files:
+        try:
+            eml_path = os.path.join(eml_folder, eml_file)
+            print(f"正在解析: {eml_file}")
+
+            # 读取并解析EML文件
+            with open(eml_path, 'rb') as f:
+                msg = email.message_from_bytes(f.read())
+
+            # 使用现有的parse_email_content方法解析邮件
+            parsed_email = self.parse_email_content(msg, attachments_path)
+
+            # 生成唯一ID
+            unique_id = f"eml_{eml_file}_{int(datetime.now().timestamp())}"
+            parsed_email['id'] = unique_id
+
+            emails.append(parsed_email)
+            print(f"成功解析: {eml_file}")
+
+        except Exception as e:
+            print(f"解析 {eml_file} 时出错: {e}")
+            # 记录错误信息
+            error_info = f"EML解析失败 - 文件: {eml_file}, 错误: {str(e)}\n"
+            with open("saikavv.txt", "a", encoding="utf-8") as f:
+                f.write(error_info)
+            continue
+
+    # 保存CSV文件
+    if emails:
+        csv_path = os.path.join(save_path, "eml_emails.csv")
+        self.save_to_csv(emails, csv_path)
+
+    return emails
+
+
+
+
+# 更新后的 main 函数示例:
+
+def main():
+    """
+    主函数示例：如何使用邮件解析助手（包括EML解析功能）
+    """
+    # 配置邮箱信息
+    EMAIL_ADDRESS = "info@ueasychina.com"
+    PASSWORD = "N9cDiJrFEbe3KSI7"  # 建议使用应用专用密码
+
+    # 创建邮件解析助手实例
+    parser = EmailParser(EMAIL_ADDRESS, PASSWORD)
+
+    try:
+        # 连接到邮箱
+        if not parser.connect():
+            return
+
+        print("成功连接到邮箱")
+
+        # 获取所有可用的邮箱文件夹
+        folders = parser.get_mailboxes()
+        print("可用的邮箱文件夹:")
+        for folder in folders:
+            print(f"- {folder}")
+
+        # 解析收件箱中符合条件的邮件，保存到指定文件夹
+        emails = parser.fetch_customs_emails(
+            folder="INBOX",
+            limit=1000,  # 限制处理邮件数量
+            save_path="/Volumes/Samsung/vos/email_results"  # 保存到指定文件夹
+        )
+
+        # 显示结果
+        print(f"\n成功解析 {len(emails)} 封符合条件的邮件:")
+        for i, email_info in enumerate(emails[:3]):  # 只显示前3封
+            print(f"\n--- 邮件 {i+1} ---")
+            print(f"主题: {email_info['subject']}")
+            print(f"发件人: {email_info['from']}")
+            print(f"日期: {email_info['date']}")
+            if email_info['attachments']:
+                print(f"附件: {len(email_info['attachments'])} 个")
+            print(f"正文预览: {email_info['body_text'][:100]}...")
+
+    except Exception as e:
+        print(f"处理过程中出现错误: {e}")
+
+    finally:
+        # 断开连接
+        parser.disconnect()
+
+    # 示例：解析单个EML文件
+    print("\n=== EML文件解析示例 ===")
+    try:
+        # 替换为实际的EML文件路径
+        eml_file_path = "./[粤ZAE98港]317-10095492 报关资料（版本号 1-1746761464126-8094293）.eml"
+        if os.path.exists(eml_file_path):
+            eml_result = parser.parse_eml_file(
+                eml_path=eml_file_path,
+                save_path="./eml_results"
+            )
+            print(f"成功解析EML文件: {eml_result['subject']}")
+        else:
+            print("示例EML文件不存在，请修改路径后重试")
+    except Exception as e:
+        print(f"EML文件解析出错: {e}")
+
+    # 示例：批量解析EML文件
+    print("\n=== 批量EML文件解析示例 ===")
+    try:
+        # 替换为包含EML文件的实际文件夹路径
+        eml_folder_path = "/path/to/eml/folder"
+        if os.path.exists(eml_folder_path):
+            eml_results = parser.batch_parse_eml_files(
+                eml_folder=eml_folder_path,
+                save_path="./batch_eml_results"
+            )
+            print(f"成功批量解析 {len(eml_results)} 个EML文件")
+        else:
+            print("示例EML文件夹不存在，请修改路径后重试")
+    except Exception as e:
+        print(f"批量解析EML文件出错: {e}")
+
 if __name__ == "__main__":
     main()
+
+# if __name__ == "__main__":
+#     main()
