@@ -13,6 +13,117 @@ import warnings
 warnings.filterwarnings('ignore', category=UserWarning, module='openpyxl.styles.stylesheet')
 
 class EmailParser:
+    def batch_parse_eml_files(self, eml_folder: str, save_path: str = "./eml_results") -> List[Dict]:
+        """
+        批量解析文件夹中的EML邮件文件
+
+        Args:
+            eml_folder: 包含EML文件的文件夹路径
+            save_path: 结果保存路径
+
+        Returns:
+            List[Dict]: 解析后的邮件列表
+        """
+        # 获取所有EML文件
+        eml_files = [f for f in os.listdir(eml_folder) if f.lower().endswith('.eml')]
+
+        if not eml_files:
+            print(f"在 {eml_folder} 中未找到EML文件")
+            return []
+
+        print(f"找到 {len(eml_files)} 个EML文件")
+
+        # 创建结果保存目录
+        os.makedirs(save_path, exist_ok=True)
+        attachments_path = os.path.join(save_path, "attachments")
+        os.makedirs(attachments_path, exist_ok=True)
+
+        emails = []
+        for eml_file in eml_files:
+            try:
+                eml_path = os.path.join(eml_folder, eml_file)
+                print(f"正在解析: {eml_file}")
+
+                # 读取并解析EML文件
+                with open(eml_path, 'rb') as f:
+                    msg = email.message_from_bytes(f.read())
+
+                # 使用现有的parse_email_content方法解析邮件
+                parsed_email = self.parse_email_content(msg, attachments_path)
+
+                # 生成唯一ID
+                unique_id = f"eml_{eml_file}_{int(datetime.now().timestamp())}"
+                parsed_email['id'] = unique_id
+
+                # 提取报关资料信息
+                subject = parsed_email.get('subject', '')
+                body_text = parsed_email.get('body_text', '')
+                
+                # 使用正则表达式提取信息
+                # 提取提单号 (从主题中)
+                bl_no_match = re.search(r'(\d+-\d+)\s+报关资料', subject)
+                bl_no = bl_no_match.group(1) if bl_no_match else ''
+                
+                # 提取其他信息 (从正文中)
+                gross_weight_match = re.search(r'提单总毛重[：:]\s*(\d+\.?\d*)\s*KG', body_text)
+                gross_weight = gross_weight_match.group(1) if gross_weight_match else ''
+                
+                cartons_match = re.search(r'大箱个数[：:]\s*(\d+(?:\.\d+)?)\s*个?', body_text)
+                cartons = cartons_match.group(1) if cartons_match else ''
+                
+                packages_match = re.search(r'包裹个数[：:]\s*(\d+(?:\.\d+)?)\s*个?', body_text)
+                packages = packages_match.group(1) if packages_match else ''
+                
+                volume_match = re.search(r'总体积[：:]\s*(\d+\.?\d*)\s*CBM', body_text)
+                volume = volume_match.group(1) if volume_match else ''
+                
+                # 从附件中提取目的地国家信息
+                destination_country = ''
+                attachments = parsed_email.get('attachments', [])
+                for attachment_path in attachments:
+                    try:
+                        # 读取Excel文件
+                        df_attachment = pd.read_excel(attachment_path)
+                        
+                        # 查找'目的地国家'列
+                        if '目的地国家' in df_attachment.columns:
+                            # 获取所有目的地国家
+                            countries_in_file = df_attachment['目的地国家'].dropna().tolist()
+                            
+                            # 如果有多个国家，取第一个作为代表
+                            if countries_in_file:
+                                destination_country = countries_in_file[0]
+                                break
+                    except Exception as e:
+                        print(f"读取附件 {attachment_path} 时出错: {e}")
+                        continue
+                
+                # 将提取的信息添加到解析结果中
+                parsed_email['提单号'] = bl_no
+                parsed_email['提单总毛重(KG)'] = gross_weight
+                parsed_email['大箱个数'] = cartons
+                parsed_email['包裹个数'] = packages
+                parsed_email['总体积(CBM)'] = volume
+                parsed_email['目的地国家'] = destination_country
+
+                emails.append(parsed_email)
+                print(f"成功解析: {eml_file}")
+
+            except Exception as e:
+                print(f"解析 {eml_file} 时出错: {e}")
+                # 记录错误信息
+                error_info = f"EML解析失败 - 文件: {eml_file}, 错误: {str(e)}\n"
+                with open("saikavv.txt", "a", encoding="utf-8") as f:
+                    f.write(error_info)
+                continue
+
+        # 保存CSV文件
+        if emails:
+            csv_path = os.path.join(save_path, "eml_emails.csv")
+            self.save_to_csv(emails, csv_path)
+
+        return emails
+
     # 在 EmailParser 类中添加以下方法:
 
     def parse_eml_file(self, eml_path: str, save_path: str = "./eml_results") -> Dict:
@@ -689,65 +800,6 @@ def main2():
 
 
 
-def batch_parse_eml_files(self, eml_folder: str, save_path: str = "./eml_results") -> List[Dict]:
-    """
-    批量解析文件夹中的EML邮件文件
-
-    Args:
-        eml_folder: 包含EML文件的文件夹路径
-        save_path: 结果保存路径
-
-    Returns:
-        List[Dict]: 解析后的邮件列表
-    """
-    # 获取所有EML文件
-    eml_files = [f for f in os.listdir(eml_folder) if f.lower().endswith('.eml')]
-
-    if not eml_files:
-        print(f"在 {eml_folder} 中未找到EML文件")
-        return []
-
-    print(f"找到 {len(eml_files)} 个EML文件")
-
-    # 创建结果保存目录
-    os.makedirs(save_path, exist_ok=True)
-    attachments_path = os.path.join(save_path, "attachments")
-    os.makedirs(attachments_path, exist_ok=True)
-
-    emails = []
-    for eml_file in eml_files:
-        try:
-            eml_path = os.path.join(eml_folder, eml_file)
-            print(f"正在解析: {eml_file}")
-
-            # 读取并解析EML文件
-            with open(eml_path, 'rb') as f:
-                msg = email.message_from_bytes(f.read())
-
-            # 使用现有的parse_email_content方法解析邮件
-            parsed_email = self.parse_email_content(msg, attachments_path)
-
-            # 生成唯一ID
-            unique_id = f"eml_{eml_file}_{int(datetime.now().timestamp())}"
-            parsed_email['id'] = unique_id
-
-            emails.append(parsed_email)
-            print(f"成功解析: {eml_file}")
-
-        except Exception as e:
-            print(f"解析 {eml_file} 时出错: {e}")
-            # 记录错误信息
-            error_info = f"EML解析失败 - 文件: {eml_file}, 错误: {str(e)}\n"
-            with open("saikavv.txt", "a", encoding="utf-8") as f:
-                f.write(error_info)
-            continue
-
-    # 保存CSV文件
-    if emails:
-        csv_path = os.path.join(save_path, "eml_emails.csv")
-        self.save_to_csv(emails, csv_path)
-
-    return emails
 
 
 
@@ -807,7 +859,7 @@ def main():
     print("\n=== EML文件解析示例 ===")
     try:
         # 替换为实际的EML文件路径
-        eml_file_path = "./[粤ZAE98港]317-10095492 报关资料（版本号 1-1746761464126-8094293）.eml"
+        eml_file_path = "./065-45339965 报关资料（版本号 1-1732957891167-5468710）.eml"
         if os.path.exists(eml_file_path):
             eml_result = parser.parse_eml_file(
                 eml_path=eml_file_path,
@@ -823,7 +875,7 @@ def main():
     print("\n=== 批量EML文件解析示例 ===")
     try:
         # 替换为包含EML文件的实际文件夹路径
-        eml_folder_path = "/path/to/eml/folder"
+        eml_folder_path = "./foldervb"
         if os.path.exists(eml_folder_path):
             eml_results = parser.batch_parse_eml_files(
                 eml_folder=eml_folder_path,
